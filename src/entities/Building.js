@@ -8,9 +8,18 @@
         h: 20,
         body: null,
 
+        selected: false,
+
+        hasComputer: false,
+        hasPiece: false,
+
         init: function (world, x, y) {
             this.body = (window.Physics.createBox(world, x, y, 1, 1)).GetBody();
             this.body.SetUserData(this);
+            this.hasComputer = Ω.utils.oneIn(7);
+            if (this.hasComputer) {
+                this.hasPiece = Ω.utils.oneIn(2);
+            }
         },
 
         tick: function () {
@@ -29,6 +38,8 @@
             c.rotate(this.angle);
             c.translate(-10, -10);
             c.fillRect(0, 0, this.w, this.h);
+            c.fillStyle = this.selected ? "#FA5C6F" : "#5CFA6F";
+            c.fillRect(0, 0, this.w, 1);
             c.restore();
 
         }

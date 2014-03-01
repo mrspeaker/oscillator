@@ -50,12 +50,12 @@
             fixDef.restitution = 0.9;
 
             // Ground
-            this.createBox(world, 0, 11, 40, 0.1, true);
+            this.createBox(world, 0, 11, 37, 0.1, true);
             //this.createTest(world);
 
             // walls
             this.createBox(world, 0, 0, 0.1, 11, true);
-            this.createBox(world, 40 - 0.1, 0, 0.1, 11, true);
+            this.createBox(world, 37 - 0.1, 0, 0.1, 11, true);
 
             //setup debug draw
             var debugDraw = new B2DebugDraw();
@@ -109,9 +109,10 @@
             this.fixDef.shape = new B2CircleShape(radius / 2);
             bodyDef.position.x = x + (radius / 2);
             bodyDef.position.y = y + (radius / 2);
-            world.CreateBody(bodyDef).CreateFixture(this.fixDef);
+            var o = world.CreateBody(bodyDef).CreateFixture(this.fixDef);
 
             this.fixDef.density = originalDensity;
+            return o;
         },
 
         createTest: function (world) {
