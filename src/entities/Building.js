@@ -15,6 +15,7 @@
 
         tick: function () {
             var pos = this.body.GetPosition();
+            this.angle = this.body.GetAngle();
             this.x = pos.x * 20 - 10;
             this.y = pos.y * 20 - 10;
         },
@@ -23,7 +24,12 @@
 
             var c = gfx.ctx;
             c.fillStyle = "#000";
-            c.fillRect(this.x, this.y, this.w, this.h);
+            c.save();
+            c.translate(this.x + 10,  this.y + 10);
+            c.rotate(this.angle);
+            c.translate(-10, -10);
+            c.fillRect(0, 0, this.w, this.h);
+            c.restore();
 
         }
 

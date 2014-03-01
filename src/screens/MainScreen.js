@@ -45,7 +45,7 @@
                 var sel = Physics.getBodyAtXY(this.world, Ω.input.mouse.x / this.scale, Ω.input.mouse.y / this.scale);
                 if (sel) {
                     sel.SetAwake(true);
-                    console.log(sel.GetUserData());
+                    console.log(sel.GetAngle());
                 }
             }
 
