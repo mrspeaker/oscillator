@@ -47,12 +47,15 @@
             var obj = body ? body.GetUserData() : null;
 
             if (obj && obj.type == "BUILDING") {
-                if (this.selected) {
-                    this.selected.selected = false;
+                if (obj !== this.selected) {
+                    if (this.selected) {
+                        this.selected.selected = false;
+                    }
+                    obj.selected = true;
+                    this.selected = obj;
+                    this.deSelected = false;
+                    this.player.goTo(obj);
                 }
-                obj.selected = true;
-                this.selected = obj;
-                this.deSelected = false;
             } else {
                 this.deSelected = true;
             }
@@ -72,7 +75,7 @@
             this.player.tick();
 
             var step = window.game.preset_dt;
-            step /= 8;//Math.max(1, Math.abs(Math.sin(Date.now() / 1000) * 20));
+            step /= 10; //Math.max(1, Math.abs(Math.sin(Date.now() / 1000) * 20));
             this.world.Step(step, 10, 10);
             this.world.ClearForces();
 
@@ -86,7 +89,6 @@
                         if (m.exploding) {
                             var dist = Ω.utils.distCenter(b, m);
                             if (dist < 12) {
-                                //Physics.jumpTo(b.body, 1, -1, 0);//b.body.GetPosition().x, -2);
                                 b.disactivate();
                             }
                         }

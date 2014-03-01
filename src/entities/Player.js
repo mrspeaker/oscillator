@@ -6,6 +6,11 @@
         w: 24,
         h: 32,
 
+        bx: 0,
+        by: 220,
+
+        room: null,
+
         missiles: null,
 
         init: function (x, y, screen) {
@@ -32,6 +37,18 @@
                 return m.tick();
             });
 
+            if (this.room) {
+                if (this.room.x + 10 < this.bx) {
+                    this.bx -= 10;
+                } else if (this.room.x + 10 > this.bx) {
+                    this.bx += 10;
+                }
+            }
+
+        },
+
+        goTo: function (room) {
+            this.room = room;
         },
 
         render: function (gfx) {
@@ -41,9 +58,12 @@
             this.missiles.forEach(function (m) {
                 m.render(gfx);
             });
+            c.fillStyle = "hsl(200, 90%, 50%)";
+            c.fillRect(this.bx - 3, this.by - 1, 6, 3);
 
             c.fillStyle = "hsl(80, 50%, 50%)";
             c.fillRect(this.x - 2, this.y - 2, 4, 4);
+
         }
 
     });

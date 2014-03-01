@@ -18,7 +18,7 @@
         init: function (world, x, y) {
             this.body = (window.Physics.createBox(world, x, y, 1, 1)).GetBody();
             this.body.SetUserData(this);
-            this.hasComputer = Ω.utils.oneIn(7);
+            this.hasComputer = Ω.utils.oneIn(4);
             if (this.hasComputer) {
                 this.hasPiece = Ω.utils.oneIn(2);
             }

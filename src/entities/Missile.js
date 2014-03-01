@@ -11,9 +11,16 @@
         exploding: false,
         explodeTime: 0,
 
+        trails: null,
+
         init: function (x, y, tx, ty) {
             this._super(x, y);
 
+            this.trails = [],
+            this.count = 0;
+
+            this.sx = x;
+            this.sy = y;
             this.tx = tx;
             this.ty = ty;
 
@@ -28,7 +35,11 @@
                 this.x += this.xSpeed;
                 this.y += this.ySpeed;
 
-                if (Math.abs(this.x - this.tx) < 3 && Math.abs(this.y - this.ty) < 3) {
+                if (++this.count % 10 === 0) {
+                    this.trails.push([this.x + 2, this.y + 2]);
+                }
+
+                if (Math.abs(this.x - this.tx) < 2 && Math.abs(this.y - this.ty) < 2) {
                     this.exploding = true;
                     this.explodeTime = 30;
                 }
@@ -41,6 +52,15 @@
         render: function (gfx) {
             var c = gfx.ctx;
 
+            c.strokeStyle = "#FF5BA6";
+            c.setLineDash([2,2]);
+            c.beginPath();
+            c.moveTo(this.sx, this.sy);
+            c.lineTo(this.x, this.y);
+            c.stroke();
+            //this.trails.forEach(function (t) {
+            //    c.fillRect(t[0] - 1, t[1] - 1, 2, 2);
+            //});
             c.fillStyle = "#333";
             if (!this.exploding) {
                 c.fillRect(this.x, this.y, this.w, this.h);
