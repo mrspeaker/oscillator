@@ -8,6 +8,8 @@
         h: 20,
         body: null,
 
+        type: "BUILDING",
+
         selected: false,
 
         hasComputer: false,
@@ -40,6 +42,8 @@
             c.fillRect(0, 0, this.w, this.h);
             c.fillStyle = this.selected ? "#FA5C6F" : "#5CFA6F";
             c.fillRect(0, 0, this.w, 1);
+            c.fillStyle = "#333";
+            c.fillRect(0, 0, 1, this.h);
             c.restore();
 
         }

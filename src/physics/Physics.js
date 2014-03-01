@@ -7,15 +7,21 @@
         B2BodyDef = Box2D.Dynamics.b2BodyDef,
         B2Body = Box2D.Dynamics.b2Body,
         B2FixtureDef = Box2D.Dynamics.b2FixtureDef,
-        //b2Fixture = Box2D.Dynamics.b2Fixture,
+        // b2Fixture = Box2D.Dynamics.b2Fixture,
         B2World = Box2D.Dynamics.b2World,
-        //b2MassData = Box2D.Collision.Shapes.b2MassData,
+        // b2MassData = Box2D.Collision.Shapes.b2MassData,
         B2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape,
         B2CircleShape = Box2D.Collision.Shapes.b2CircleShape,
         B2DebugDraw = Box2D.Dynamics.b2DebugDraw;
-        //b2MouseJointDef =  Box2D.Dynamics.Joints.b2MouseJointDef;
+        // b2MouseJointDef =  Box2D.Dynamics.Joints.b2MouseJointDef;
 
     window.Physics = {
+
+        jumpTo: function (body, x, y) {
+            body.SetType(0);
+            body.SetPosition(new B2Vec2(body.GetPosition().x, y));
+            body.SetType(2);
+        },
 
         getBodyAtXY: function (world, x, y) {
             var mousePVec = new B2Vec2(x, y),
@@ -40,12 +46,22 @@
 
         createWorld: function (scale) {
             var world = new B2World(
-                new B2Vec2(0, 10),    //gravity
-                true                 //allow sleep
+                new B2Vec2(0, 10), //gravity
+                true //allow sleep
             );
 
             var fixDef = this.fixDef = new B2FixtureDef();
             fixDef.density = 1.0;
+            fixDef.friction = 0.2;
+            fixDef.restitution = 0.9;
+
+            fixDef = this.fixDefBuilding = new B2FixtureDef();
+            fixDef.density = 1.0;
+            fixDef.friction = 0.2;
+            fixDef.restitution = 0.2;
+
+            fixDef = this.fixDefBomb = new B2FixtureDef();
+            fixDef.density = 1.0 * 5.5;
             fixDef.friction = 0.2;
             fixDef.restitution = 0.9;
 
@@ -86,14 +102,14 @@
             var bodyDef = new B2BodyDef();
             //create some objects
             bodyDef.type = isStatic ? B2Body.b2_staticBody : B2Body.b2_dynamicBody;
-            this.fixDef.shape = new B2PolygonShape();
-            this.fixDef.shape.SetAsBox(
+            this.fixDefBuilding.shape = new B2PolygonShape();
+            this.fixDefBuilding.shape.SetAsBox(
                 width / 2,
                 height / 2
             );
             bodyDef.position.x = x + (width / 2);
             bodyDef.position.y = y + (height / 2);
-            var o = world.CreateBody(bodyDef).CreateFixture(this.fixDef);
+            var o = world.CreateBody(bodyDef).CreateFixture(this.fixDefBuilding);
 
             return o;
         },
@@ -101,17 +117,13 @@
         createCircle: function(world, x, y, radius, isStatic) {
             var bodyDef = new B2BodyDef();
 
-            var originalDensity = this.fixDef.density;
-            this.fixDef.density = originalDensity * 2;
-
             //create some objects
             bodyDef.type = isStatic ? B2Body.b2_staticBody : B2Body.b2_dynamicBody;
-            this.fixDef.shape = new B2CircleShape(radius / 2);
+            this.fixDefBomb.shape = new B2CircleShape(radius / 2);
             bodyDef.position.x = x + (radius / 2);
             bodyDef.position.y = y + (radius / 2);
-            var o = world.CreateBody(bodyDef).CreateFixture(this.fixDef);
+            var o = world.CreateBody(bodyDef).CreateFixture(this.fixDefBomb);
 
-            this.fixDef.density = originalDensity;
             return o;
         },
 

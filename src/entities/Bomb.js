@@ -31,7 +31,6 @@
             c.fillStyle = "#FFCF5B";
             c.fillRect(0, this.h - 1, this.w, 1);
             c.restore();
-
         }
 
     });

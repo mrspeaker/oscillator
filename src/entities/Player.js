@@ -6,24 +6,44 @@
         w: 24,
         h: 32,
 
+        missiles: null,
+
+        init: function (x, y, screen) {
+            this._super(x, y);
+            this.screen = screen;
+            this.missiles = [];
+        },
+
         tick: function () {
 
-            this.y += Math.sin(Ω.utils.now() / 140) * 5;
+            this.x = Ω.input.mouse.x;
+            this.y = Ω.input.mouse.y;
 
-            if (Ω.input.isDown("left")) {
-                this.x -= 3;
+            if (Ω.input.pressed("select")) {
+                if (this.screen.deSelected) {
+
+                    this.missiles.push(
+                        new Missile(this.screen.selected.x + 10, this.screen.selected.y + 10, this.x, this.y)
+                    );
+                }
             }
-            if (Ω.input.isDown("right")) {
-                this.x += 3;
-            }
+
+            this.missiles = this.missiles.filter(function (m) {
+                return m.tick();
+            });
 
         },
 
         render: function (gfx) {
 
             var c = gfx.ctx;
-            c.fillStyle = "#333";
-            c.fillRect(this.x, this.y, this.w, this.h);
+
+            this.missiles.forEach(function (m) {
+                m.render(gfx);
+            });
+
+            c.fillStyle = "hsl(80, 50%, 50%)";
+            c.fillRect(this.x - 2, this.y - 2, 4, 4);
         }
 
     });
