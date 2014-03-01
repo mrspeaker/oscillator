@@ -12,6 +12,7 @@
         room: null,
 
         missiles: null,
+        mustGoToGround: false,
 
         init: function (x, y, screen) {
             this._super(x, y);
@@ -37,18 +38,25 @@
                 return m.tick();
             });
 
-            if (this.room) {
-                if (this.room.x + 10 < this.bx) {
-                    this.bx -= 10;
-                } else if (this.room.x + 10 > this.bx) {
-                    this.bx += 10;
+            if (!this.arrived && this.room) {
+                var arrived = Math.abs(this.room.x - this.bx) < 5;
+                if (!arrived) {
+                    if (this.room.x + 10 < this.bx) {
+                        this.bx -= 10;
+                    } else if (this.room.x + 10 > this.bx) {
+                        this.bx += 10;
+                    }
                 }
             }
 
         },
 
         goTo: function (room) {
+            this.lastRoom = this.room;
             this.room = room;
+            if (this.lastRoom && this.lastRoom.col !== this.room.col) {
+                this.mustGoToGround = true;
+            }
         },
 
         render: function (gfx) {

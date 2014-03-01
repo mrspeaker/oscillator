@@ -33,7 +33,7 @@
                 var h = (Math.random() * 3 | 0) + 5;
                 for (var i = 0; i < h; i++) {
                     this.buildings.push(
-                        new Building(this.world, j * 4 + 4, 8 - (i * 1) + 2)
+                        new Building(this.world, j * 4 + 4, 8 - (i * 1) + 2, j, i)
                     )
                 }
             }
@@ -51,7 +51,7 @@
                     if (this.selected) {
                         this.selected.selected = false;
                     }
-                    obj.selected = true;
+                    obj.search();
                     this.selected = obj;
                     this.deSelected = false;
                     this.player.goTo(obj);
@@ -128,12 +128,18 @@
             this.bombs.forEach(function (b) {
                 b.render(gfx);
             });
+            this.renderCompy(gfx);
+
             this.player.render(gfx);
 
+        },
+
+        renderCompy: function (gfx) {
             var puterX = gfx.w - 210,
                 puterY = 60,
                 puterW = 200,
-                puterH = gfx.h - 80;
+                puterH = gfx.h - 80,
+                c = gfx.ctx;
 
             c.fillStyle = "#000";
             c.strokeStyle = "#444";
@@ -147,7 +153,6 @@
                 c.fillText("COMPUTER? " + (this.selected.hasComputer ? "Y" : "N"), puterX + 10, puterY + 20);
                 c.fillText("CODE? " + (this.selected.hasPiece ? "Y" : "N"), puterX + 10, puterY + 30);
             }
-
         }
     });
 
