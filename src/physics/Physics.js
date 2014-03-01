@@ -30,12 +30,12 @@
             var fixDef = this.fixDef = new b2FixtureDef();
             fixDef.density = 1.0;
             fixDef.friction = 0.5;
-            fixDef.restitution = 0.2;
+            fixDef.restitution = 0.9;
 
             // Ground
             this.createBox(world, 0, 11, 40, 0.1, true);
 
-            this.createTest(world);
+            //this.createTest(world);
             // walls
             this.createBox(world, 0, 0, 0.1, 11, true);
             this.createBox(world, 40 - 0.1, 0, 0.1, 11, true);
@@ -81,12 +81,23 @@
             world.CreateBody(bodyDef).CreateFixture(this.fixDef);
         },
 
+        createCircle: function(world, x, y, radius, isStatic) {
+            var bodyDef = new b2BodyDef();
+
+            //create some objects
+            bodyDef.type = isStatic ? b2Body.b2_staticBody : b2Body.b2_dynamicBody;
+            this.fixDef.shape = new b2CircleShape(radius / 2);
+            bodyDef.position.x = x + (radius / 2);
+            bodyDef.position.y = y + (radius / 2);
+            world.CreateBody(bodyDef).CreateFixture(this.fixDef);
+        },
+
         createTest: function (world) {
             var bodyDef = new b2BodyDef();
 
             //create some objects
             bodyDef.type = b2Body.b2_dynamicBody;
-            for(var i = 0; i < 10; ++i) {
+            for(var i = 0; i < 20; ++i) {
                if(Math.random() > 0.5) {
                   this.fixDef.shape = new b2PolygonShape;
                   this.fixDef.shape.SetAsBox(
@@ -98,8 +109,8 @@
                      Math.random() + 0.1 //radius
                   );
                }
-               bodyDef.position.x = Math.random() * 10 + 1;
-               bodyDef.position.y = Math.random() * 10 + 1;
+               bodyDef.position.x = Math.random() * 25+ 1;
+               bodyDef.position.y = Math.random() * 4 + 1;
                world.CreateBody(bodyDef).CreateFixture(this.fixDef);
             }
         }
