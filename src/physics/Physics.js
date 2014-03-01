@@ -46,7 +46,7 @@
 
             var fixDef = this.fixDef = new B2FixtureDef();
             fixDef.density = 1.0;
-            fixDef.friction = 0.5;
+            fixDef.friction = 0.2;
             fixDef.restitution = 0.9;
 
             // Ground
@@ -84,7 +84,6 @@
 
         createBox: function(world, x, y, width, height, isStatic) {
             var bodyDef = new B2BodyDef();
-
             //create some objects
             bodyDef.type = isStatic ? B2Body.b2_staticBody : B2Body.b2_dynamicBody;
             this.fixDef.shape = new B2PolygonShape();
@@ -94,11 +93,16 @@
             );
             bodyDef.position.x = x + (width / 2);
             bodyDef.position.y = y + (height / 2);
-            world.CreateBody(bodyDef).CreateFixture(this.fixDef);
+            var o = world.CreateBody(bodyDef).CreateFixture(this.fixDef);
+
+            return o;
         },
 
         createCircle: function(world, x, y, radius, isStatic) {
             var bodyDef = new B2BodyDef();
+
+            var originalDensity = this.fixDef.density;
+            this.fixDef.density = originalDensity * 2;
 
             //create some objects
             bodyDef.type = isStatic ? B2Body.b2_staticBody : B2Body.b2_dynamicBody;
@@ -106,6 +110,8 @@
             bodyDef.position.x = x + (radius / 2);
             bodyDef.position.y = y + (radius / 2);
             world.CreateBody(bodyDef).CreateFixture(this.fixDef);
+
+            this.fixDef.density = originalDensity;
         },
 
         createTest: function (world) {
