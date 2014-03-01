@@ -22,7 +22,7 @@
                 "right": "right",
                 "up": "up",
                 "down": "down",
-                "moused": "mouse1"
+                "select": "mouse1"
             });
 
         },

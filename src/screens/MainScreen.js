@@ -4,10 +4,12 @@
 
     var MainScreen = Ω.Screen.extend({
 
+        scale: 20,
+
         init: function () {
 
             this.player = new window.Player(Ω.env.w * 0.5, Ω.env.h * 0.2);
-            this.world = window.Physics.createWorld();
+            this.world = window.Physics.createWorld(this.scale);
 
             for (var j = 0; j < 8; j++) {
                 var h = (Math.random() * 3 | 0) + 5;
@@ -27,6 +29,13 @@
             step /= Math.max(1, Math.abs(Math.sin(Date.now() / 1000) * 20));
             this.world.Step(step, 10, 10);
             this.world.ClearForces();
+
+            if (Ω.input.pressed("select")) {
+                var sel = Physics.getBodyAtXY(this.world, Ω.input.mouse.x / this.scale, Ω.input.mouse.y / this.scale);
+                if (sel) {
+                    sel.SetAwake(true);
+                }
+            }
 
         },
 
