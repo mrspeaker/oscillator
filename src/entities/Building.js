@@ -43,7 +43,7 @@
             c.fillStyle = this.selected ? "#FA5C6F" : "#5CFA6F";
             c.fillRect(0, 0, this.w, 1);
             c.fillStyle = "#333";
-            c.fillRect(0, 0, 1, this.h);
+            c.fillRect(0, 0, 2, this.h);
             c.restore();
 
         }

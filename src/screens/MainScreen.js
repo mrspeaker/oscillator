@@ -9,6 +9,8 @@
         buildings: null,
         bombs: null,
 
+        count: 0,
+
         bg: new Ω.Image("res/images/bg.png", null, 0.5),
 
         selected: null,
@@ -37,8 +39,7 @@
             }
 
             var xbomb = (Math.random() * 8 | 0) * 4 + 2;
-            this.bombs.push(new Bomb(this.world, xbomb - 0.2, -2, 0.5));
-            this.bombs.push(new Bomb(this.world, xbomb + 0.2, 2, 0.5));
+            this.addBomb();
         },
 
         select: function (body) {
@@ -58,6 +59,12 @@
 
         },
 
+        addBomb: function () {
+            var x = (Math.random() * 8 | 0) * 4 + 2;
+            this.bombs.push(new Bomb(this.world, x - 0.2, -3, 0.5));
+            this.bombs.push(new Bomb(this.world, x + 0.2, -1, 0.5));
+        },
+
         tick: function () {
 
             this.handleInput();
@@ -65,7 +72,7 @@
             this.player.tick();
 
             var step = window.game.preset_dt;
-            step /= 10; //Math.max(1, Math.abs(Math.sin(Date.now() / 1000) * 20));
+            step /= 8;//Math.max(1, Math.abs(Math.sin(Date.now() / 1000) * 20));
             this.world.Step(step, 10, 10);
             this.world.ClearForces();
 
@@ -73,16 +80,24 @@
                 b.tick();
             });
             this.bombs.forEach(function (b) {
-                b.tick();
-                this.player.missiles.forEach(function (m) {
-                    if (m.exploding) {
-                        var dist = Ω.utils.distCenter(b, m);
-                        if (dist < 12) {
-                            Physics.jumpTo(b.body, 1, -1, 0);//b.body.GetPosition().x, -2);
+                var alive = b.tick();
+                if (alive) {
+                    this.player.missiles.forEach(function (m) {
+                        if (m.exploding) {
+                            var dist = Ω.utils.distCenter(b, m);
+                            if (dist < 12) {
+                                //Physics.jumpTo(b.body, 1, -1, 0);//b.body.GetPosition().x, -2);
+                                b.disactivate();
+                            }
                         }
-                    }
-                });
+                    });
+                }
+                return alive;
             }, this);
+
+            if (++this.count % 500 === 0) {
+                this.addBomb();
+            }
 
         },
 
@@ -100,11 +115,10 @@
             this.clear(gfx, "hsl(195, 40%, 5%)");
             this.bg.render(gfx, 0, 0);
 
-            c.fillStyle = "hsla(30, 10%, 9%, 0.2)";
+            //c.fillStyle = "hsla(30, 10%, 9%, 0.2)";
             //c.fillRect(0, gfx.h - 160, gfx.w, 130);
 
             //this.world.DrawDebugData();
-            this.player.render(gfx);
 
             this.buildings.forEach(function (b) {
                 b.render(gfx);
@@ -112,6 +126,7 @@
             this.bombs.forEach(function (b) {
                 b.render(gfx);
             });
+            this.player.render(gfx);
 
             var puterX = gfx.w - 210,
                 puterY = 60,

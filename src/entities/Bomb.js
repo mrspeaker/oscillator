@@ -8,6 +8,8 @@
         h: 10,
         body: null,
 
+        remove: false,
+
         init: function (world, x, y) {
             this.body = (window.Physics.createCircle(world, x, y, 0.5)).GetBody();
             this.body.SetUserData(this);
@@ -18,6 +20,15 @@
             this.angle = this.body.GetAngle();
             this.x = pos.x * 20 - 5;
             this.y = pos.y * 20 - 5;
+
+            return !(this.remove);
+        },
+
+        disactivate: function () {
+            this.body.SetActive(false);
+            Physics.jumpTo(this.body, 0, -3);
+            this.remove = true;
+            console.log("dis!");
         },
 
         render: function (gfx) {
