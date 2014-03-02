@@ -49,17 +49,14 @@
         render: function (gfx) {
 
             var c = gfx.ctx;
-            c.fillStyle = this.dead ? "#300" : (this.selected && !this.searched && Ω.utils.toggle(300, 2) ? "#2CDA3F" : "#000");
-            if (this.hasPiece) {
-                c.fillStyle = "#440";
-            }
+            c.fillStyle = this.selected && !this.searched && Ω.utils.toggle(300, 2) ? "#2CDA3F" : "#000";
             c.save();
             c.translate(this.x + 10,  this.y + 10);
             c.rotate(this.angle);
             c.translate(-10, -10);
             c.fillRect(0, 0, this.w, this.h);
             // If !searched, and selected - flash.
-            c.fillStyle = this.selected ? "#FA5C6F" : (this.searched ? "#0F5CFA" : "#5CFA6F");
+            c.fillStyle = this.dead ? "#222" : (this.selected ? "#FA5C6F" : (this.searched ? "#0F5CFA" : "#5CFA6F"));
             c.fillRect(0, 0, this.w, 1);
             c.fillStyle = "#333";
             c.fillRect(0, 0, 2, this.h);

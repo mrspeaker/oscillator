@@ -16,6 +16,7 @@
         voiceOverCount: 0,
 
         pieces: null,
+        bombTime: 500,
 
         count: 0,
 
@@ -126,6 +127,8 @@
             var x = (Math.random() * 8 | 0) * 4 + 2;
             this.bombs.push(new Bomb(this.world, x - 0.2, -3, 0.5));
             this.bombs.push(new Bomb(this.world, x + 0.2, -1, 0.5));
+            this.bombTime -= 10;
+            console.log(this.bombTime);
         },
 
         tick: function () {
@@ -149,7 +152,7 @@
                 }
                 break;
             case "RUNNING":
-                if (++this.count % 500 === 0) {
+                if (++this.count % this.bombTime === 0) {
                     if (this.firstBomb) {
                         this.firstBomb = false;
                         this.voiceOver = "incoming projectiles. shoot them.";
@@ -243,27 +246,27 @@
         },
 
         renderCompy: function (gfx) {
-            var puterX = gfx.w - 186,
-                puterY = 0,
-                puterW = 186,
-                puterH = gfx.h - 80,
+            var puterX = 500,
+                puterY = gfx.h - 70,
+                puterW = 240,
+                puterH = 60,
                 c = gfx.ctx;
 
             c.fillStyle = "#000";
-            c.strokeStyle = "#444";
+            //c.strokeStyle = "#444";
             c.fillRect(puterX, puterY, puterW, puterH);
-            c.strokeRect(puterX, puterY, puterW, puterH);
-            c.fillStyle = "#FFCF5B";
-            c.font = "10pt monospace";
+            //c.strokeRect(puterX, puterY, puterW, puterH);
+            c.fillStyle = "#FA5C6F";//"#FFCF5B";
+            c.font = "8pt monospace";
 
             var msgs = this.player.puterMsg;
             msgs.forEach(function (msg, i) {
                 if (i != msgs.length - 1 || Ω.utils.toggle(200, 2)) {
-                    c.fillText(msg, puterX + 10, puterY + (i + 1) * 20);
+                    c.fillText(msg, puterX + 5, puterY + (i + 1) * 10 + 5);
                 }
             });
 
-            this.res.scanlines.render(gfx, puterX, puterY);
+            //this.res.scanlines.render(gfx, puterX, puterY);
         },
 
         renderCode: function (gfx) {

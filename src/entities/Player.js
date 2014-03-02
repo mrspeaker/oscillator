@@ -24,7 +24,7 @@
             this._super(x, y);
             this.screen = screen;
             this.missiles = [];
-            this.puterMsg = ["SEARCH CONDOS", "RECOVER THE CODES", "", "FIRE ON PROJECTILES",""];
+            this.puterMsg = [""];
             this.state = new Ω.utils.State("BORN");
         },
 
@@ -81,7 +81,7 @@
                     if (this.room.hasComputer) {
                         this.state.set("SCANCOMPUTER");
                     } else {
-                        this.puterMsg.push("", "[search complete]");
+                        this.puterMsg.push("[SEARCH COMPLETE.]");
                     }
                 }
                 if (this.state.count === 70) {
