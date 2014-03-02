@@ -21,8 +21,8 @@
             this.body.SetUserData(this);
             this.col = col;
             this.row = row;
-            if (this.hasComputer) {
             this.hasComputer = Ω.utils.oneIn(4);
+            if (this.hasComputer) {
                 this.hasPiece = Ω.utils.oneIn(2);
             }
         },

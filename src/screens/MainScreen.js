@@ -147,12 +147,15 @@
             c.strokeRect(puterX, puterY, puterW, puterH);
             c.fillStyle = "#FFCF5B";
             c.font = "10pt monospace";
-            if (!this.selected) {
+            /*if (!this.selected) {
                 c.fillText("NO SIGNAL", puterX + 10, puterY + 20);
             } else {
                 c.fillText("COMPUTER? " + (this.selected.hasComputer ? "Y" : "N"), puterX + 10, puterY + 20);
                 c.fillText("CODE? " + (this.selected.hasPiece ? "Y" : "N"), puterX + 10, puterY + 30);
-            }
+            }*/
+            this.player.puterMsg.forEach(function (msg, i) {
+                c.fillText(msg, puterX + 10, puterY + (i + 1) * 20);
+            });
         }
     });
 
