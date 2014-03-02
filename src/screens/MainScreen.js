@@ -8,8 +8,14 @@
 
         buildings: null,
         bombs: null,
+        firstBomb: true,
+
+        font: new Ω.Font("res/fonts/mig68000.png", 8, 16),
 
         voiceOver: null,
+        voiceOverCount: 0,
+
+        pieces: null,
 
         count: 0,
 
@@ -38,30 +44,61 @@
             this.player = new window.Player(Ω.env.w * 0.5, Ω.env.h * 0.2, this);
             this.world = window.Physics.createWorld(this.scale);
 
-            for (var j = 0; j < 8; j++) {
-                var h = (Math.random() * 3 | 0) + 5;
+            this.pieces = [false, false, false, false, false];
+            var numColums = 8,
+                numComputers = 15,
+                numPieces = this.pieces.length,
+                colH = [7, 6, 4, 5, 5, 6, 7, 7].sort(function () { return 0.5 - Math.random(); });
+
+            for (var j = 0; j < numColums; j++) {
+                //var h = (Math.random() * 3 | 0) + 5;
+                var h = colH[j];
                 for (var i = 0; i < h; i++) {
                     this.buildings.push(
-                        new Building(this.world, j * 4 + 4, 8 - (i * 1) + 2, j, i)
+                        new Building(this.world, j * 4 + 4, numColums - (i * 1) + 2, j, i, this)
                     );
+                    this.buildings[this.buildings.length - 1].id = j * 8 + i;
                 }
             }
 
-            this.maxPieces = this.buildings.reduce(function (ac, b) {
+            for (var k = 0; k < numComputers; k++) {
+                var room = this.buildings[Ω.utils.rand(this.buildings.length)];
+                while (room.hasComputer) {
+                    room = this.buildings[Ω.utils.rand(this.buildings.length)];
+                }
+                room.hasComputer = true;
+                if (k < numPieces) {
+                    room.hasPiece = true;
+                }
+            }
+
+            /*this.hasComputer = Ω.utils.oneIn(4);
+            if (this.hasComputer) {
+                this.hasPiece = Ω.utils.oneIn(2);
+            }*/
+
+            console.log(this.buildings.reduce(function (ac, b) {
                 return ac + (b.hasPiece ? 1 : 0);
-            }, 0);
+            }, 0));
 
         },
 
         checkPieces: function () {
-            if (this.player.numPieces === this.maxPieces) {
-                // alert("done!");
-                // game.setScreen(new TitleScreen());
+            var piece = Ω.utils.rand(this.pieces.length);
+            while (this.pieces[piece]) {
+                piece = Ω.utils.rand(this.pieces.length);
+            }
+            this.pieces[piece] = Ω.utils.now();
+            if (this.player.numPieces === this.pieces.length) {
                 this.state.set("WIN");
             }
         },
 
         select: function (body) {
+
+            if (this.state.isIn("DIE", "WIN")) {
+                return;
+            }
 
             var room = body ? body.GetUserData() : null;
 
@@ -81,6 +118,10 @@
 
         },
 
+        lostPiece: function () {
+            this.state.set("DIE");
+        },
+
         addBomb: function () {
             var x = (Math.random() * 8 | 0) * 4 + 2;
             this.bombs.push(new Bomb(this.world, x - 0.2, -3, 0.5));
@@ -94,27 +135,49 @@
 
             switch (this.state.get()) {
             case "BORN":
-                if (this.state.count > 40) {
+                if (this.state.first()) {
+                    this.voiceOver = "search condos for codes.";
+                }
+                if (this.state.count > 200) {
+                    this.voiceOver = "";
                     this.state.set("NOBOMBS");
                 }
                 break;
             case "NOBOMBS":
-                if (this.room) {
+                if (this.player.room) {
                     this.state.set("RUNNING");
-                }
-                if (++this.count % 500 === 0) {
-                    this.addBomb();
                 }
                 break;
             case "RUNNING":
+                if (++this.count % 500 === 0) {
+                    if (this.firstBomb) {
+                        this.firstBomb = false;
+                        this.voiceOver = "incoming projectiles. shoot them.";
+                        this.voiceOverCount = 100;
+                    }
+                    this.addBomb();
+                }
+                if (this.voiceOver && this.voiceOverCount--<0) {
+                    this.voiceOver = "";
+                }
                 break;
             case "EXPLOSE":
                 break;
             case "DIE":
+                if (this.state.first()) {
+                    this.voiceOver = "code corrupted. game over.";
+                }
+                if (this.state.count > 180) {
+                    game.setScreen(new TitleScreen());
+                }
+
                 break;
             case "WIN":
-                this.voiceOver = "DONE!>";
-                if (this.state.count > 100) {
+                this.voiceOver = "> program complete. executing...";
+                this.bombs.forEach(function (b) {
+                    b.body.SetActive(false);
+                });
+                if (this.state.count > 400) {
                     game.setScreen(new TitleScreen());
                 }
                 break;
@@ -123,7 +186,7 @@
             this.player.tick();
 
             var step = window.game.preset_dt;
-            step /= 10; //Math.max(1, Math.abs(Math.sin(Date.now() / 1000) * 20));
+            step /= 11; //Math.max(1, Math.abs(Math.sin(Date.now() / 1000) * 20));
             this.world.Step(step, 10, 10);
             this.world.ClearForces();
 
@@ -174,13 +237,15 @@
             this.renderCode(gfx);
             this.player.renderFG(gfx);
 
+            this.renderVoiceOver(gfx);
+
 
         },
 
         renderCompy: function (gfx) {
-            var puterX = gfx.w - 210,
-                puterY = 60,
-                puterW = 200,
+            var puterX = gfx.w - 186,
+                puterY = 0,
+                puterW = 186,
                 puterH = gfx.h - 80,
                 c = gfx.ctx;
 
@@ -203,26 +268,42 @@
 
         renderCode: function (gfx) {
             var c = gfx.ctx,
-                sx = 20,
-                sy = 230,
-                sw = 40,
-                sh = 10;
-            c.fillStyle = "#D55F4C";
-            for (var i = 0; i < this.player.numPieces; i++) {
-                c.fillRect(sx + (i * (sw + 10)), sy, sw, sh);
+                sy = 270,
+                sh = 10,
+                titleY = 240,
+                titles = ["header", "sig.", "stub", "data", "checksum"],
+                ps = [20, 100, 180, 260, 400],
+                ws = [60, 60, 60, 120, 70];
+
+            for (var i = 0; i < this.pieces.length; i++) {
+                var t = this.pieces[i];
+                c.fillStyle = t && (Ω.utils.since(t) > 2000 || Ω.utils.toggle(200, 2)) ? "#D55F4C" : "#650f0c";
+                if (this.state.is("WIN") && !(Ω.utils.toggle(200, 2))) {
+                    c.fillStyle = "#650F0C";
+                }
+                c.fillRect(ps[i], sy, ws[i], sh);
             }
-            c.fillStyle = "#650f0c";
-            for (i = this.player.numPieces; i < this.maxPieces; i++) {
-                c.fillRect(sx + (i * (sw + 10)), sy, sw, sh);
-            }
+
+            titles.forEach(function (t, i) {
+                this.font.render(gfx, t, ps[i], titleY);
+            }, this);
         },
 
-        renderVoiceOver: function (gfx, msg) {
+        renderVoiceOver: function (gfx) {
             var c = gfx.ctx;
 
-            c.fillStyle = "#FFCF5B";
-            c.font = "30pt monospace";
-            c.fillText(msg, gfx.w / 2, gfx.h / 2);
+            if (!this.voiceOver) {
+                return;
+            }
+
+            var x = gfx.w / 2 - (this.voiceOver.length * 10),
+                y = gfx.h / 2 - 4;
+
+            c.fillStyle = "rgb(0, 0, 0)";
+            c.fillRect(x - 10, y - 10, this.voiceOver.length * 8 + 20, 32);
+            if (Ω.utils.toggle(300, 2)) {
+                this.font.render(gfx, this.voiceOver, x, y);
+            }
 
         }
     });

@@ -28,7 +28,6 @@
             this.body.SetActive(false);
             Physics.jumpTo(this.body, 0, -3);
             this.remove = true;
-            console.log("dis!");
         },
 
         render: function (gfx) {

@@ -49,7 +49,6 @@
                 this.state.set("GOTOROOM");
                 break;
             case "GOTOROOM":
-                console.log(this.arrived);
                 if (!this.arrived && this.room) {
                     var arrived = Math.abs(this.room.x - this.bx) < 12;
                     if (!arrived) {
