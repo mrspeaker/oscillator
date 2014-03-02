@@ -56,7 +56,7 @@
             c.setLineDash([2,2]);
             c.beginPath();
             c.moveTo(this.sx, this.sy);
-            c.lineTo(this.x, this.y);
+            c.lineTo(this.x + this.w / 2, this.y + this.h / 2);
             c.stroke();
             //this.trails.forEach(function (t) {
             //    c.fillRect(t[0] - 1, t[1] - 1, 2, 2);
@@ -66,7 +66,7 @@
                 c.fillRect(this.x, this.y, this.w, this.h);
             } else {
                 c.beginPath();
-                c.arc(this.x + 5, this.y + 5, 15 - (Math.max(1, this.explodeTime / 2)), 0, Math.PI * 2);
+                c.arc(this.x , this.y , 15 - (Math.max(1, this.explodeTime / 2)), 0, Math.PI * 2);
                 c.fill();
             }
 

@@ -14,6 +14,8 @@
         missiles: null,
         mustGoToGround: false,
 
+        numPieces: 0,
+
         state: null,
 
         puterMsg: null,
@@ -72,6 +74,9 @@
             case "INROOM":
                 if (this.state.first()) {
                     this.puterMsg.push("HAS COMPUTER? " + (this.room.hasComputer ? "Y" : "N"));
+                    if (!this.room.hasComputer) {
+                        this.room.searched = true;
+                    }
                 }
                 if (this.state.count > 40 && this.room.hasComputer) {
                     this.state.set("SCANCOMPUTER");
@@ -87,15 +92,20 @@
                 break;
             case "INCOMPUTER":
                 if (this.state.first()) {
+                    if (this.room.hasPiece) {
+                        this.numPieces++;
+                        this.screen.checkPieces();
+                    }
                     this.puterMsg.push("FOUND CODE? " + (this.room.hasPiece ? "Y" : "N"));
+                    this.room.hasPiece = false;
+                    this.room.searched = true;
                 }
                 break;
             }
 
             // Check for missile fire
-            if (Ω.input.pressed("select")) {
+            if (Ω.input.pressed("select") && this.room) {
                 if (this.screen.deSelected) {
-
                     this.missiles.push(
                         new Missile(this.screen.selected.x + 10, this.screen.selected.y + 10, this.x, this.y)
                     );
@@ -114,19 +124,19 @@
             this.state.set("ROOMSELECTED");
         },
 
-        render: function (gfx) {
-
-            var c = gfx.ctx;
-
+        renderBG: function (gfx) {
             this.missiles.forEach(function (m) {
                 m.render(gfx);
             });
+        },
+
+        renderFG: function (gfx) {
+            var c = gfx.ctx;
             c.fillStyle = "hsl(200, 90%, 50%)";
             c.fillRect(this.bx - 3, this.by - 1, 6, 3);
 
             c.fillStyle = "hsl(80, 50%, 50%)";
             c.fillRect(this.x - 2, this.y - 2, 4, 4);
-
         }
 
     });

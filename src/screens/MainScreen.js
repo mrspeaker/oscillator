@@ -11,7 +11,10 @@
 
         count: 0,
 
-        bg: new Ω.Image("res/images/bg.png", null, 0.5),
+        res: {
+            bg: new Ω.Image("res/images/bg.png", null, 0.5),
+            scanlines: new Ω.Image("res/images/scanlines.png", null, 0.5),
+        },
 
         selected: null,
         deSelected: false,
@@ -34,27 +37,39 @@
                 for (var i = 0; i < h; i++) {
                     this.buildings.push(
                         new Building(this.world, j * 4 + 4, 8 - (i * 1) + 2, j, i)
-                    )
+                    );
                 }
             }
+
+            this.maxPieces = this.buildings.reduce(function (ac, b) {
+                return ac + (b.hasPiece ? 1 : 0);
+            }, 0);
+            console.log(this.maxPieces);
 
             var xbomb = (Math.random() * 8 | 0) * 4 + 2;
             this.addBomb();
         },
 
+        checkPieces: function () {
+            if (this.player.numPieces === this.maxPieces) {
+                alert("done!");
+                game.setSceen(new MainScreen());
+            }
+        },
+
         select: function (body) {
 
-            var obj = body ? body.GetUserData() : null;
+            var room = body ? body.GetUserData() : null;
 
-            if (obj && obj.type == "BUILDING") {
-                if (obj !== this.selected) {
+            if (room && room.type == "BUILDING") {
+                if (!room.searched) {
                     if (this.selected) {
                         this.selected.selected = false;
                     }
-                    obj.search();
-                    this.selected = obj;
+                    room.select();
+                    this.selected = room;
                     this.deSelected = false;
-                    this.player.goTo(obj);
+                    this.player.goTo(room);
                 }
             } else {
                 this.deSelected = true;
@@ -115,11 +130,8 @@
             var c = gfx.ctx;
 
             this.clear(gfx, "hsl(195, 40%, 5%)");
-            this.bg.render(gfx, 0, 0);
-
-            //c.fillStyle = "hsla(30, 10%, 9%, 0.2)";
-            //c.fillRect(0, gfx.h - 160, gfx.w, 130);
-
+            this.res.bg.render(gfx, 0, 0);
+            this.player.renderBG(gfx);
             //this.world.DrawDebugData();
 
             this.buildings.forEach(function (b) {
@@ -130,7 +142,9 @@
             });
             this.renderCompy(gfx);
 
-            this.player.render(gfx);
+            this.renderCode(gfx);
+            this.player.renderFG(gfx);
+
 
         },
 
@@ -153,9 +167,30 @@
                 c.fillText("COMPUTER? " + (this.selected.hasComputer ? "Y" : "N"), puterX + 10, puterY + 20);
                 c.fillText("CODE? " + (this.selected.hasPiece ? "Y" : "N"), puterX + 10, puterY + 30);
             }*/
-            this.player.puterMsg.forEach(function (msg, i) {
-                c.fillText(msg, puterX + 10, puterY + (i + 1) * 20);
+            var msgs = this.player.puterMsg;
+            msgs.forEach(function (msg, i) {
+                if (i != msgs.length - 1 || Ω.utils.toggle(200, 2)) {
+                    c.fillText(msg, puterX + 10, puterY + (i + 1) * 20);
+                }
             });
+
+            this.res.scanlines.render(gfx, puterX, puterY);
+        },
+
+        renderCode: function (gfx) {
+            var c = gfx.ctx,
+                sx = 20,
+                sy = 230,
+                sw = 40,
+                sh = 10;
+            c.fillStyle = "#D55F4C";
+            for (var i = 0; i < this.player.numPieces; i++) {
+                c.fillRect(sx + (i * (sw + 10)), sy, sw, sh);
+            }
+            c.fillStyle = "#650f0c";
+            for (i = this.player.numPieces; i < this.maxPieces; i++) {
+                c.fillRect(sx + (i * (sw + 10)), sy, sw, sh);
+            }
         }
     });
 

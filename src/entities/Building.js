@@ -27,9 +27,9 @@
             }
         },
 
-        search: function () {
+        select: function () {
             this.selected = true;
-            this.searched = true;
+            //this.searched = true;
         },
 
         tick: function () {
