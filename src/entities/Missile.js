@@ -8,6 +8,8 @@
         h: 6,
         speed: 1,
 
+        rad: 0,
+
         exploding: false,
         explodeTime: 0,
         maxExplodeTime: 40,
@@ -44,6 +46,8 @@
                     this.exploding = true;
                     this.explodeTime = this.maxExplodeTime;
                 }
+            } else {
+                this.rad = Math.max(1, (this.maxExplodeTime/2) - (Math.max(1, this.explodeTime / 2)));
             }
 
             return !(this.exploding && this.explodeTime-- < 0);
@@ -64,7 +68,7 @@
                 c.fillRect(this.x, this.y, this.w, this.h);
             } else {
                 c.beginPath();
-                c.arc(this.x + this.w / 2 , this.y + this.h / 2 , (this.maxExplodeTime/2) - (Math.max(1, this.explodeTime / 2)), 0, Math.PI * 2);
+                c.arc(this.x + this.w / 2 , this.y + this.h / 2 , this.rad, 0, Math.PI * 2);
                 c.fill();
             }
 

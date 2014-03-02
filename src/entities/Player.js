@@ -115,9 +115,12 @@
             // Check for missile fire
             if (Ω.input.pressed("select") && this.room) {
                 if (this.screen.deSelected) {
-                    this.missiles.push(
-                        new Missile(this.screen.selected.x + 10, this.screen.selected.y + 10, this.x, this.y)
-                    );
+                    // If in the screen, fire.
+                    if (this.x > 0 && this.x < Ω.env.w && this.y > 0 && this.y < 218) {
+                        this.missiles.push(
+                            new Missile(this.screen.selected.x + 10, this.screen.selected.y + 10, this.x, this.y)
+                        );
+                    }
                 }
             }
 

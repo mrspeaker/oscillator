@@ -171,6 +171,7 @@
             case "DIE":
                 if (this.state.first()) {
                     this.voiceOver = "code corrupted. game over.";
+                    this.selected.selected = false;
                 }
                 if (this.state.count > 100 && Ω.input.pressed("select")) {
                     game.setScreen(new TitleScreen());
@@ -204,7 +205,7 @@
                     this.player.missiles.forEach(function (m) {
                         if (m.exploding) {
                             var dist = Ω.utils.distCenter(b, m);
-                            if (dist < 12) {
+                            if (dist < m.rad) {
                                 b.disactivate();
                             }
                         }
@@ -313,8 +314,8 @@
                 return;
             }
 
-            var x = gfx.w / 2 - (this.voiceOver.length * 10),
-                y = gfx.h / 2 - 4;
+            var x = gfx.w / 2 - (this.voiceOver.length * 8),
+                y = gfx.h / 2 - 8;
 
             c.fillStyle = "rgb(0, 0, 0)";
             c.fillRect(x - 10, y - 10, this.voiceOver.length * 8 + 20, 32);
