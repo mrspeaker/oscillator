@@ -18,6 +18,12 @@
 
         state: null,
 
+        audio: {
+            located: new Ω.Sound("res/audio/codelocated"),
+            notfound: new Ω.Sound("res/audio/notfound"),
+            scanning: new Ω.Sound("res/audio/scanning"),
+        },
+
         puterMsg: null,
 
         init: function (x, y, screen) {
@@ -64,7 +70,7 @@
                 break;
             case "SCANROOM":
                 if (this.state.first()) {
-                    this.puterMsg = ["///SCANNING CONDO"];
+                    this.puterMsg = ["> PLEASE WAIT... SCANNING CONDO."];
                 }
                 if (this.state.count > 60) {
                     this.state.set("INROOM");
@@ -81,6 +87,7 @@
                     if (this.room.hasComputer) {
                         this.state.set("SCANCOMPUTER");
                     } else {
+                        this.audio.notfound.play();
                         this.puterMsg.push("[SEARCH COMPLETE.]");
                     }
                 }
@@ -90,6 +97,7 @@
                 break;
             case "SCANCOMPUTER":
                 if (this.state.first()) {
+                    this.audio.scanning.play();
                     this.puterMsg.push("SCANNING COMPUTER");
                 }
                 if (this.state.count > 80) {
@@ -103,6 +111,11 @@
                         this.screen.checkPieces();
                     }
                     this.puterMsg.push("FOUND CODE? " + (this.room.hasPiece ? "Y" : "N"));
+                    if (this.room.hasPiece) {
+                        this.audio.located.play();
+                    } else {
+                        this.audio.notfound.play();
+                    }
                     this.room.hasPiece = false;
                     this.room.searched = true;
                 }

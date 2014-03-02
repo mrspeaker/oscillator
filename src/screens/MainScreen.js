@@ -25,6 +25,14 @@
             scanlines: new Ω.Image("res/images/scanlines.png", null, 0.5),
         },
 
+        audio: {
+            warning: new Ω.Sound("res/audio/warning"),
+            danger: new Ω.Sound("res/audio/danger"),
+            corrupt: new Ω.Sound("res/audio/codecorrupted"),
+            complete: new Ω.Sound("res/audio/programcomplete"),
+            welldone: new Ω.Sound("res/audio/welldone")
+        },
+
         selected: null,
         deSelected: false,
 
@@ -73,15 +81,6 @@
                 }
             }
 
-            /*this.hasComputer = Ω.utils.oneIn(4);
-            if (this.hasComputer) {
-                this.hasPiece = Ω.utils.oneIn(2);
-            }*/
-
-            console.log(this.buildings.reduce(function (ac, b) {
-                return ac + (b.hasPiece ? 1 : 0);
-            }, 0));
-
         },
 
         checkPieces: function () {
@@ -129,7 +128,7 @@
             var x = (Math.random() * 8 | 0) * 4 + 2;
             this.bombs.push(new Bomb(this.world, x - 0.2, -3, 0.5));
             this.bombs.push(new Bomb(this.world, x + 0.2, -1, 0.5));
-            this.bombTime -= 10;
+            this.bombTime -= 5;
             console.log(this.bombTime);
         },
 
@@ -159,6 +158,7 @@
                         this.firstBomb = false;
                         this.voiceOver = "incoming projectiles. shoot them.";
                         this.voiceOverCount = 100;
+                        this.audio.warning.play();
                     }
                     this.addBomb();
                 }
@@ -171,6 +171,7 @@
             case "DIE":
                 if (this.state.first()) {
                     this.voiceOver = "code corrupted. game over.";
+                    this.audio.corrupted.play();
                     this.selected.selected = false;
                 }
                 if (this.state.count > 100 && Ω.input.pressed("select")) {
@@ -179,10 +180,16 @@
 
                 break;
             case "WIN":
-                this.voiceOver = "> program complete. executing...";
+                this.voiceOver = "> program complete. overide successful.";
+                if (this.state.first()) {
+                    this.audio.complete.play();
+                }
                 this.bombs.forEach(function (b) {
                     b.body.SetActive(false);
                 });
+                if (this.state.count == 130) {
+                    this.audio.welldone.play();
+                }
                 if (this.state.count > 100 && Ω.input.pressed("select")) {
                     game.setScreen(new TitleScreen());
                 }
@@ -314,11 +321,13 @@
                 return;
             }
 
-            var x = gfx.w / 2 - (this.voiceOver.length * 8),
-                y = gfx.h / 2 - 8;
+            var x = gfx.w / 2 - (this.voiceOver.length * 4),
+                y = gfx.h / 2 - 16;
 
+            c.strokeStyle = "#333";
             c.fillStyle = "rgb(0, 0, 0)";
             c.fillRect(x - 10, y - 10, this.voiceOver.length * 8 + 20, 32);
+            c.strokeRect(x - 10, y - 10, this.voiceOver.length * 8 + 20, 32);
             if (Ω.utils.toggle(300, 2)) {
                 this.font.render(gfx, this.voiceOver, x, y);
             }

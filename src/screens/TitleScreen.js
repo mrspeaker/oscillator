@@ -8,8 +8,14 @@
 
         font: new Ω.Font("res/fonts/mig68000.png", 8, 16),
 
+        sfx: new Ω.Sound("res/audio/oscillator"),
+
+        init: function () {
+            this.sfx.play();
+        },
+
         tick: function () {
-            if (++this.count > 40) {
+            if (++this.count > 40 && Ω.input.pressed("select")) {
                 game.setScreen(new MainScreen());
             }
         },
