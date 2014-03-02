@@ -140,7 +140,7 @@
             switch (this.state.get()) {
             case "BORN":
                 if (this.state.first()) {
-                    this.voiceOver = "search condos for codes.";
+                    this.voiceOver = "search condos for codes fragments";
                 }
                 if (this.state.count > 200) {
                     this.voiceOver = "";
@@ -156,7 +156,7 @@
                 if (++this.count % this.bombTime === 0) {
                     if (this.firstBomb) {
                         this.firstBomb = false;
-                        this.voiceOver = "incoming projectiles. shoot them.";
+                        this.voiceOver = "incoming projectiles. fire!";
                         this.voiceOverCount = 100;
                         this.audio.warning.play();
                     }
@@ -171,10 +171,11 @@
             case "DIE":
                 if (this.state.first()) {
                     this.voiceOver = "code corrupted. game over.";
-                    this.audio.corrupted.play();
+                    this.audio.corrupt.play();
                     this.selected.selected = false;
+                    this.player.die();
                 }
-                if (this.state.count > 100 && Ω.input.pressed("select")) {
+                if (this.state.count > 150 && Ω.input.pressed("select")) {
                     game.setScreen(new TitleScreen());
                 }
 

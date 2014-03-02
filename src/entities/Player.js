@@ -6,7 +6,7 @@
         w: 24,
         h: 32,
 
-        bx: 0,
+        bx: -5,
         by: 220,
 
         room: null,
@@ -56,7 +56,7 @@
                 break;
             case "GOTOROOM":
                 if (!this.arrived && this.room) {
-                    var arrived = Math.abs(this.room.x - this.bx) < 12;
+                    var arrived = Math.abs((this.room.x + 5) - (this.bx + 4)) < 12;
                     if (!arrived) {
                         if (this.room.x + 10 < this.bx) {
                             this.bx -= 10;
@@ -65,6 +65,7 @@
                         }
                     } else {
                         this.state.set("SCANROOM");
+                        this.bx = this.room.x + 12;
                     }
                 }
                 break;
@@ -88,7 +89,7 @@
                         this.state.set("SCANCOMPUTER");
                     } else {
                         this.audio.notfound.play();
-                        this.puterMsg.push("[SEARCH COMPLETE.]");
+                        this.puterMsg.push("SEARCH COMPLETE. TRY ELSEWHERE.");
                     }
                 }
                 if (this.state.count === 70) {
@@ -112,7 +113,9 @@
                     }
                     this.puterMsg.push("FOUND CODE? " + (this.room.hasPiece ? "Y" : "N"));
                     if (this.room.hasPiece) {
-                        this.audio.located.play();
+                        if (this.numPieces < 5) {
+                            this.audio.located.play();
+                        }
                     } else {
                         this.audio.notfound.play();
                     }
@@ -122,6 +125,8 @@
                 if (this.state.count == 40) {
                     this.puterMsg.push("");
                 }
+                break;
+            case "DIE":
                 break;
             }
 
@@ -141,6 +146,11 @@
                 return m.tick();
             });
 
+        },
+
+        die: function () {
+            this.state.set("DIE");
+            this.puterMsg = [""];
         },
 
         goTo: function (room) {
