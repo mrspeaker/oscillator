@@ -120,7 +120,9 @@
         },
 
         lostPiece: function () {
-            this.state.set("DIE");
+            if (this.state.isNot("DIE")) {
+                this.state.set("DIE");
+            }
         },
 
         addBomb: function () {
@@ -170,7 +172,7 @@
                 if (this.state.first()) {
                     this.voiceOver = "code corrupted. game over.";
                 }
-                if (this.state.count > 180) {
+                if (this.state.count > 100 && Ω.input.pressed("select")) {
                     game.setScreen(new TitleScreen());
                 }
 
@@ -180,7 +182,7 @@
                 this.bombs.forEach(function (b) {
                     b.body.SetActive(false);
                 });
-                if (this.state.count > 400) {
+                if (this.state.count > 100 && Ω.input.pressed("select")) {
                     game.setScreen(new TitleScreen());
                 }
                 break;
@@ -239,9 +241,21 @@
 
             this.renderCode(gfx);
             this.player.renderFG(gfx);
+            var state = this.state.get();
+
+            if (state === "DIE" || state === "WIN") {
+                var grd = c.createRadialGradient(gfx.w / 2, gfx.h / 2, 0, gfx.w / 2, gfx.h /2, 400);
+
+                grd.addColorStop(0, "rgba(0, 0, 0, 0)");
+                var col = state === "DIE" ? "0,80%,8%" : (this.state.count % 360 | 0) + ",50%,30%";
+                grd.addColorStop(1, "hsla(" + col + ",0.4)");
+
+                c.fillStyle = grd;
+                c.fillRect(0, 0, gfx.w, gfx.h);
+                c.fill();
+            }
 
             this.renderVoiceOver(gfx);
-
 
         },
 

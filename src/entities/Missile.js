@@ -10,6 +10,7 @@
 
         exploding: false,
         explodeTime: 0,
+        maxExplodeTime: 40,
 
         trails: null,
 
@@ -41,7 +42,7 @@
 
                 if (Math.abs(this.x - this.tx) < 2 && Math.abs(this.y - this.ty) < 2) {
                     this.exploding = true;
-                    this.explodeTime = 30;
+                    this.explodeTime = this.maxExplodeTime;
                 }
             }
 
@@ -58,15 +59,12 @@
             c.moveTo(this.sx, this.sy);
             c.lineTo(this.x + this.w / 2, this.y + this.h / 2);
             c.stroke();
-            //this.trails.forEach(function (t) {
-            //    c.fillRect(t[0] - 1, t[1] - 1, 2, 2);
-            //});
-            c.fillStyle = "#333";
+            c.fillStyle = "#282828";
             if (!this.exploding) {
                 c.fillRect(this.x, this.y, this.w, this.h);
             } else {
                 c.beginPath();
-                c.arc(this.x , this.y , 15 - (Math.max(1, this.explodeTime / 2)), 0, Math.PI * 2);
+                c.arc(this.x + this.w / 2 , this.y + this.h / 2 , (this.maxExplodeTime/2) - (Math.max(1, this.explodeTime / 2)), 0, Math.PI * 2);
                 c.fill();
             }
 
