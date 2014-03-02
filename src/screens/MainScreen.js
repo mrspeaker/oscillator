@@ -9,6 +9,8 @@
         buildings: null,
         bombs: null,
 
+        voiceOver: null,
+
         count: 0,
 
         res: {
@@ -19,10 +21,14 @@
         selected: null,
         deSelected: false,
 
+        state: null,
+
         init: function () {
 
             this.buildings = [];
             this.bombs = [];
+
+            this.state = new Ω.utils.State("BORN");
 
             this.selected ={
                 x: Ω.env.w / 2,
@@ -44,16 +50,14 @@
             this.maxPieces = this.buildings.reduce(function (ac, b) {
                 return ac + (b.hasPiece ? 1 : 0);
             }, 0);
-            console.log(this.maxPieces);
 
-            var xbomb = (Math.random() * 8 | 0) * 4 + 2;
-            this.addBomb();
         },
 
         checkPieces: function () {
             if (this.player.numPieces === this.maxPieces) {
-                alert("done!");
-                game.setSceen(new MainScreen());
+                // alert("done!");
+                // game.setScreen(new TitleScreen());
+                this.state.set("WIN");
             }
         },
 
@@ -86,6 +90,35 @@
         tick: function () {
 
             this.handleInput();
+            this.state.tick();
+
+            switch (this.state.get()) {
+            case "BORN":
+                if (this.state.count > 40) {
+                    this.state.set("NOBOMBS");
+                }
+                break;
+            case "NOBOMBS":
+                if (this.room) {
+                    this.state.set("RUNNING");
+                }
+                if (++this.count % 500 === 0) {
+                    this.addBomb();
+                }
+                break;
+            case "RUNNING":
+                break;
+            case "EXPLOSE":
+                break;
+            case "DIE":
+                break;
+            case "WIN":
+                this.voiceOver = "DONE!>";
+                if (this.state.count > 100) {
+                    game.setScreen(new TitleScreen());
+                }
+                break;
+            }
 
             this.player.tick();
 
@@ -111,10 +144,6 @@
                 }
                 return alive;
             }, this);
-
-            if (++this.count % 500 === 0) {
-                this.addBomb();
-            }
 
         },
 
@@ -161,12 +190,7 @@
             c.strokeRect(puterX, puterY, puterW, puterH);
             c.fillStyle = "#FFCF5B";
             c.font = "10pt monospace";
-            /*if (!this.selected) {
-                c.fillText("NO SIGNAL", puterX + 10, puterY + 20);
-            } else {
-                c.fillText("COMPUTER? " + (this.selected.hasComputer ? "Y" : "N"), puterX + 10, puterY + 20);
-                c.fillText("CODE? " + (this.selected.hasPiece ? "Y" : "N"), puterX + 10, puterY + 30);
-            }*/
+
             var msgs = this.player.puterMsg;
             msgs.forEach(function (msg, i) {
                 if (i != msgs.length - 1 || Ω.utils.toggle(200, 2)) {
@@ -191,6 +215,15 @@
             for (i = this.player.numPieces; i < this.maxPieces; i++) {
                 c.fillRect(sx + (i * (sw + 10)), sy, sw, sh);
             }
+        },
+
+        renderVoiceOver: function (gfx, msg) {
+            var c = gfx.ctx;
+
+            c.fillStyle = "#FFCF5B";
+            c.font = "30pt monospace";
+            c.fillText(msg, gfx.w / 2, gfx.h / 2);
+
         }
     });
 

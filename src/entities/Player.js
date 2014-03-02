@@ -24,7 +24,7 @@
             this._super(x, y);
             this.screen = screen;
             this.missiles = [];
-            this.puterMsg = [""];
+            this.puterMsg = ["SEARCH CONDOS", "RECOVER THE CODES", "", "FIRE ON PROJECTILES",""];
             this.state = new Ω.utils.State("BORN");
         },
 
@@ -43,7 +43,7 @@
                     if (this.lastRoom && this.lastRoom.col !== this.room.col) {
                         this.mustGoToGround = true;
                     }
-                    this.puterMsg = ["NO SIGNAL"];
+                    this.puterMsg = ["NO SIGNAL", ""];
                     this.arrived = false;
                 }
                 this.state.set("GOTOROOM");
@@ -65,9 +65,9 @@
                 break;
             case "SCANROOM":
                 if (this.state.first()) {
-                    this.puterMsg = ["///SCANNING"];
+                    this.puterMsg = ["///SCANNING CONDO"];
                 }
-                if (this.state.count > 40) {
+                if (this.state.count > 60) {
                     this.state.set("INROOM");
                 }
                 break;
@@ -78,8 +78,15 @@
                         this.room.searched = true;
                     }
                 }
-                if (this.state.count > 40 && this.room.hasComputer) {
-                    this.state.set("SCANCOMPUTER");
+                if (this.state.count === 40) {
+                    if (this.room.hasComputer) {
+                        this.state.set("SCANCOMPUTER");
+                    } else {
+                        this.puterMsg.push("", "[search complete]");
+                    }
+                }
+                if (this.state.count === 70) {
+                    this.puterMsg.push("");
                 }
                 break;
             case "SCANCOMPUTER":
@@ -99,6 +106,9 @@
                     this.puterMsg.push("FOUND CODE? " + (this.room.hasPiece ? "Y" : "N"));
                     this.room.hasPiece = false;
                     this.room.searched = true;
+                }
+                if (this.state.count == 40) {
+                    this.puterMsg.push("");
                 }
                 break;
             }
