@@ -21,7 +21,8 @@
         audio: {
             located: new Ω.Sound("res/audio/codelocated"),
             notfound: new Ω.Sound("res/audio/notfound"),
-            scanning: new Ω.Sound("res/audio/scanning"),
+            scanning: new Ω.Sound("res/audio/scanning")
+
         },
 
         puterMsg: null,
@@ -32,6 +33,10 @@
             this.missiles = [];
             this.puterMsg = [""];
             this.state = new Ω.utils.State("BORN");
+            this.lastMissile = Ω.utils.now();
+
+            Ω.input.mouse.x = -10;
+            Ω.input.mouse.y = -10;
         },
 
         tick: function () {
@@ -138,6 +143,10 @@
                         this.missiles.push(
                             new Missile(this.screen.selected.x + 10, this.screen.selected.y + 10, this.x, this.y)
                         );
+                        if (Ω.utils.since(this.lastMissile) > 100) {
+//                            this.audio.fire.play();
+                            this.lastMissile = Ω.utils.now();
+                        }
                     }
                 }
             }

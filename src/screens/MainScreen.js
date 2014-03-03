@@ -17,7 +17,7 @@
 
         pieces: null,
         bombTime: 500,
-
+        smokes: null,
         count: 0,
 
         res: {
@@ -30,7 +30,9 @@
             danger: new Ω.Sound("res/audio/danger"),
             corrupt: new Ω.Sound("res/audio/codecorrupted"),
             complete: new Ω.Sound("res/audio/programcomplete"),
-            welldone: new Ω.Sound("res/audio/welldone")
+            welldone: new Ω.Sound("res/audio/welldone"),
+            tickle: new Ω.Sound("res/audio/tickle"),
+            tick: new Ω.Sound("res/audio/tick", 0.6)
         },
 
         selected: null,
@@ -42,6 +44,7 @@
 
             this.buildings = [];
             this.bombs = [];
+            this.smokes = [];
 
             this.state = new Ω.utils.State("BORN");
 
@@ -50,7 +53,7 @@
                 y: Ω.env.h
             };
 
-            this.player = new window.Player(Ω.env.w * 0.5, Ω.env.h * 0.2, this);
+            this.player = new window.Player(-10 , -10, this);
             this.world = window.Physics.createWorld(this.scale);
 
             this.pieces = [false, false, false, false, false];
@@ -92,6 +95,7 @@
             if (this.player.numPieces === this.pieces.length) {
                 this.state.set("WIN");
             }
+            this.bombTime -= 10;
         },
 
         select: function (body) {
@@ -103,6 +107,7 @@
             var room = body ? body.GetUserData() : null;
 
             if (room && room.type == "BUILDING") {
+                this.audio.tick.play();
                 if (!room.searched) {
                     if (this.selected) {
                         this.selected.selected = false;
@@ -126,10 +131,9 @@
 
         addBomb: function () {
             var x = (Math.random() * 8 | 0) * 4 + 2;
-            this.bombs.push(new Bomb(this.world, x - 0.2, -3, 0.5));
-            this.bombs.push(new Bomb(this.world, x + 0.2, -1, 0.5));
+            this.bombs.push(new Bomb(this.world, x - 0.2, -3, this));
+            this.bombs.push(new Bomb(this.world, x + 0.2, -1, this));
             this.bombTime -= 5;
-            console.log(this.bombTime);
         },
 
         tick: function () {
@@ -140,7 +144,10 @@
             switch (this.state.get()) {
             case "BORN":
                 if (this.state.first()) {
-                    this.voiceOver = "search condos for codes fragments";
+                    this.voiceOver = "search for codes fragments";
+                }
+                if (this.state.count == 25) {
+                    this.audio.tickle.play();
                 }
                 if (this.state.count > 200) {
                     this.voiceOver = "";
@@ -204,23 +211,29 @@
             this.world.Step(step, 10, 10);
             this.world.ClearForces();
 
+            this.smokes = this.smokes.filter(function (s) {
+                return s.tick();
+            });
+
             this.buildings.forEach(function (b) {
                 b.tick();
             });
+            var self = this;
             this.bombs.forEach(function (b) {
                 var alive = b.tick();
                 if (alive) {
-                    this.player.missiles.forEach(function (m) {
+                    self.player.missiles.forEach(function (m) {
                         if (m.exploding) {
                             var dist = Ω.utils.distCenter(b, m);
                             if (dist < m.rad) {
                                 b.disactivate();
+                                self.smokey(b);
                             }
                         }
                     });
                 }
                 return alive;
-            }, this);
+            });
 
         },
 
@@ -231,11 +244,24 @@
             }
         },
 
+        smokey: function (b) {
+            for (var i = 0; i < 5; i++) {
+                var s = new Smoke(
+                    b.x + Ω.utils.rand(-5, 5),
+                    b.y + Ω.utils.rand(-5, 5),
+                    Ω.utils.rand(5, 10) / 10 - 0.5,
+                    Ω.utils.rand(5, 10) / 10 - 0.5,
+                    Ω.utils.rand(2, 20),
+                    Ω.utils.rand(0, 100) / 100);
+                this.smokes.push(s);
+            }
+        },
+
         render: function (gfx) {
 
             var c = gfx.ctx;
 
-            this.clear(gfx, "hsl(195, 40%, 5%)");
+            this.clear(gfx, "#111419");
             this.res.bg.render(gfx, 0, 0);
             this.player.renderBG(gfx);
             //this.world.DrawDebugData();
@@ -245,6 +271,9 @@
             });
             this.bombs.forEach(function (b) {
                 b.render(gfx);
+            });
+            this.smokes.forEach(function (s) {
+                s.render(gfx);
             });
             this.renderCompy(gfx);
 
@@ -303,9 +332,9 @@
 
             for (var i = 0; i < this.pieces.length; i++) {
                 var t = this.pieces[i];
-                c.fillStyle = t && (Ω.utils.since(t) > 2000 || Ω.utils.toggle(200, 2)) ? "#D55F4C" : "#650f0c";
+                c.fillStyle = t && (Ω.utils.since(t) > 2000 || Ω.utils.toggle(200, 2)) ? "#FA5C6F" : "#24343B";
                 if (this.state.is("WIN") && !(Ω.utils.toggle(200, 2))) {
-                    c.fillStyle = "#650F0C";
+                    c.fillStyle = "#24343B";
                 }
                 c.fillRect(ps[i], sy, ws[i], sh);
             }

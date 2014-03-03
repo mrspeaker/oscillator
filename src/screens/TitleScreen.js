@@ -9,9 +9,11 @@
         font: new Ω.Font("res/fonts/mig68000.png", 8, 16),
 
         sfx: new Ω.Sound("res/audio/oscillator"),
+        bom: new Ω.Sound("res/audio/transport"),
 
         init: function () {
             this.sfx.play();
+            this.bom.play();
         },
 
         tick: function () {

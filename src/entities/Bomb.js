@@ -8,18 +8,28 @@
         h: 10,
         body: null,
 
+        audio: new Ω.Sound("res/audio/heartbeat"),
+
         remove: false,
 
-        init: function (world, x, y) {
+        count: 0,
+
+        init: function (world, x, y, screen) {
             this.body = (window.Physics.createCircle(world, x, y, 0.5)).GetBody();
             this.body.SetUserData(this);
+            this.screen = screen;
         },
 
         tick: function () {
+
             var pos = this.body.GetPosition();
             this.angle = this.body.GetAngle();
             this.x = pos.x * 20 - 5;
             this.y = pos.y * 20 - 5;
+
+            if (this.count++ === 140 && this.screen.state.isNotIn("DIE", "WIN")) {
+                this.audio.play();
+            }
 
             return !(this.remove);
         },
@@ -38,7 +48,7 @@
             c.rotate(this.angle);
             c.translate(-5, -5);
             c.fillRect(0, 0, this.w, this.h);
-            c.fillStyle = "#FFCF5B";
+            c.fillStyle = "#FFF400";
             c.fillRect(0, this.h - 1, this.w, 1);
             c.restore();
         }

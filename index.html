@@ -5,19 +5,28 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="viewport" content="user-scalable=0, initial-scale=1.0" />
 
-    <title>Oscillator</title>
+    <title>Oscillator: by Mr Speaker</title>
 
     <link rel="stylesheet" href="res/main.css">
 </head>
 <body>
+    <!--
+        Oscillator: by Mr Speaker
+        for the #cyberpunkjam
+        (@mrspeaker | www.mrspeaker.net)
+
+    -->
     <section>
         <canvas id="board"></canvas>
+        <div id="credits">
+            by <a href="http://www.mrspeaker.net/">Mr Speaker</a>. Go
+            <span id="fs">fullscreen</span> mode.
+        </div>
     </section>
 
 
     <!-- libs -->
     <script src="lib/jquery-2.1.0.js"></script>
-    <script src="lib/lodash-2.4.1.js"></script>
     <script src='lib/Box2dWeb/Box2dWeb-2.1.a.3.js'></script>
 
     <script src="lib/Ω500.js"></script>
@@ -25,6 +34,7 @@
     <!-- Game -->
     <script src="src/physics/physics.js"></script>
     <script src="src/game.js"></script>
+    <script src="src/fx/Smoke.js"></script>
     <script src="src/entities/Bomb.js"></script>
     <script src="src/entities/Missile.js"></script>
     <script src="src/entities/Building.js"></script>
@@ -33,6 +43,14 @@
     <script src="src/screens/MainScreen.js"></script>
     <script>
         var game = new OmegaGame(750, 300);
+
+        document
+            .querySelector("#fs")
+            .addEventListener("click", function () {
+
+                Ω.utils.fullscreen.toggle("#board");
+
+            }, false);
     </script>
 
 </body>

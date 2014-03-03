@@ -2,6 +2,9 @@ body {
     background-color: #000;
     margin: 0;
     text-align: center;
+    font-family: helvetica, verdana, sans-serif;
+    font-size: 9pt;
+
 }
 
 #container {
@@ -18,4 +21,23 @@ canvas {
 
         cursor: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAZdEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjbQg61aAAAADUlEQVQYV2P4//8/IwAI/QL/+TZZdwAAAABJRU5ErkJggg=='),
         none;
+}
+
+#credits {
+    color: #444;
+    font-size: 8pt;
+    width: 200px;
+
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    text-align: right;
+}
+#credits a {
+    color: #FA5C6F;
+}
+#fs {
+    color : #FA5C6F;
+    text-decoration: underline;
+    cursor: pointer;
 }
