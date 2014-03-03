@@ -133,7 +133,7 @@
             var x = (Math.random() * 8 | 0) * 4 + 2;
             this.bombs.push(new Bomb(this.world, x - 0.2, -3, this));
             this.bombs.push(new Bomb(this.world, x + 0.2, -1, this));
-            this.bombTime -= 5;
+            this.bombTime -= 8;
         },
 
         tick: function () {
