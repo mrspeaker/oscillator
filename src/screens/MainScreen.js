@@ -17,8 +17,12 @@
 
         pieces: null,
         bombTime: 500,
+        lastBomb: null,
         smokes: null,
         count: 0,
+
+        bgflyPos: 500,
+        bgfly: new Ω.Image("res/images/truc.png", null, 0.3),
 
         res: {
             bg: new Ω.Image("res/images/bg.png", null, 0.5),
@@ -45,6 +49,7 @@
             this.buildings = [];
             this.bombs = [];
             this.smokes = [];
+            this.lastBomb = 0;
 
             this.state = new Ω.utils.State("BORN");
 
@@ -95,7 +100,7 @@
             if (this.player.numPieces === this.pieces.length) {
                 this.state.set("WIN");
             }
-            this.bombTime -= 10;
+            this.bombTime -= 15;
         },
 
         select: function (body) {
@@ -133,7 +138,7 @@
             var x = (Math.random() * 8 | 0) * 4 + 2;
             this.bombs.push(new Bomb(this.world, x - 0.2, -3, this));
             this.bombs.push(new Bomb(this.world, x + 0.2, -1, this));
-            this.bombTime -= 8;
+            this.bombTime -= 10;
         },
 
         tick: function () {
@@ -160,7 +165,9 @@
                 }
                 break;
             case "RUNNING":
-                if (++this.count % this.bombTime === 0) {
+                //if (this.bombTime < 50) { this.bombTime = 50; }
+                if (++this.count - this.lastBomb > this.bombTime) {
+                    console.log(this.count, this.bombTime);
                     if (this.firstBomb) {
                         this.firstBomb = false;
                         this.voiceOver = "incoming projectiles. fire!";
@@ -168,9 +175,15 @@
                         this.audio.warning.play();
                     }
                     this.addBomb();
+                    this.lastBomb = this.count;
                 }
                 if (this.voiceOver && this.voiceOverCount--<0) {
                     this.voiceOver = "";
+                }
+
+                this.bgflyPos -= 0.4;
+                if (this.bgflyPos < -20) {
+                    this.bgflyPos = Ω.env.w + 10;
                 }
                 break;
             case "EXPLOSE":
@@ -188,7 +201,7 @@
 
                 break;
             case "WIN":
-                this.voiceOver = "> program complete. overide successful.";
+                this.voiceOver = "> program complete. override successful.";
                 if (this.state.first()) {
                     this.audio.complete.play();
                 }
@@ -263,8 +276,11 @@
 
             this.clear(gfx, "#111419");
             this.res.bg.render(gfx, 0, 0);
+            this.bgfly.render(gfx, this.bgflyPos, 90);
+
             this.player.renderBG(gfx);
             //this.world.DrawDebugData();
+
 
             this.buildings.forEach(function (b) {
                 b.render(gfx);
