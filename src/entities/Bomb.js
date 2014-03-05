@@ -42,14 +42,24 @@
 
         render: function (gfx) {
             var c = gfx.ctx;
-            c.fillStyle = "#333";
+            c.fillStyle = "#222";
             c.save();
-            c.translate(this.x + 5,  this.y + 5);
+            c.translate((this.x | 0 )+ 5,  (this.y | 0) + 5);
             c.rotate(this.angle);
             c.translate(-5, -5);
             c.fillRect(0, 0, this.w, this.h);
-            c.fillStyle = "#FFF400";
+            c.fillStyle = "#FC5154";
             c.fillRect(0, this.h - 1, this.w, 1);
+
+            c.fillStyle = "#444";
+            c.fillRect(0, 0, 1, this.h - 1);
+
+            /*c.fillStyle = "#888400";
+            c.fillRect(0, this.h - 2, this.w, 1);
+
+            c.fillStyle = "#fff";
+            c.fillRect(0, this.h - 3, this.w, 1);*/
+
             c.restore();
         }
 

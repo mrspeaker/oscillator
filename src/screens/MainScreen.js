@@ -286,9 +286,20 @@
             this.res.bg.render(gfx, 0, 0);
             this.bgfly.render(gfx, this.bgflyPos, 90);
 
-            // c.fillStyle = "#33f";
-            // c.fillRect(0, 100, gfx.w, 5);
+            // add linear gradient
+            var grd = c.createLinearGradient(gfx.w / 2, 140, gfx.w / 2, 190);
+            grd.addColorStop(0, 'rgba(0,0,0,0)');
+            grd.addColorStop(1, 'rgba(17, 17, 119, 0.5)');
+            c.fillStyle = grd;
+            //c.fill();
+            //c.fillStyle = "#117";
+            c.fillRect(0, 140, gfx.w, 50);
 
+            /*c.fillStyle = "#3f3";
+            c.fillRect(0, 120, gfx.w, 5);
+
+            c.fillStyle = "#f33";
+            c.fillRect(0, 140, gfx.w, 5);*/
 
             this.player.renderBG(gfx);
             //this.world.DrawDebugData();

@@ -16,9 +16,8 @@
             });
 
             Ω.input.bind({
-                "space": "space",
                 "escape": "escape",
-                "select": ["mouse1", "touch"]
+                "select": ["mouse1", "touch", "space"]
             });
 
         },

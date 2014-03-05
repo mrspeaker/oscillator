@@ -5,6 +5,11 @@ body {
     font-family: helvetica, verdana, sans-serif;
     font-size: 9pt;
 
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+    user-select: none;
 }
 
 #container {

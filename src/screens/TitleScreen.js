@@ -17,7 +17,7 @@
         },
 
         tick: function () {
-            if (++this.count > 40 && (Ω.input.pressed("select") || Ω.input.pressed("space"))) {
+            if (++this.count > 40 && (Ω.input.pressed("select"))) {
                 game.setScreen(new MainScreen());
             }
         },

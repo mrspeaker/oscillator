@@ -58,7 +58,9 @@
 
             c.fillStyle = this.selected && !this.searched && Ω.utils.toggle(300, 2) ?
                 COL_on :
-                (isGameOver && this.hasPiece && !this.searched && Ω.utils.toggle(300, 2) ? DATA.colours.nitroMute : "#000");
+                (isGameOver && this.hasPiece && !this.searched && this.dead > 0.1 && Ω.utils.toggle(150, 2) ?
+                    DATA.colours.nitroMute :
+                    "#000");
             c.save();
             c.translate((this.x | 0) + 10,  (this.y | 0) + 10);
             c.rotate(this.angle);
