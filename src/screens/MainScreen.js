@@ -38,7 +38,7 @@
             tickle: new Ω.Sound("res/audio/tickle"),
             tick: new Ω.Sound("res/audio/tick", 0.6),
             nope: new Ω.Sound("res/audio/nope", 0.6),
-            theme: new Ω.Sound("res/audio/osctune", 0.4)
+            theme: new Ω.Sound("res/audio/osctune", 0.4, true)
         },
 
         selected: null,

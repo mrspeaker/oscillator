@@ -12,13 +12,23 @@ on GitHub: https://github.com/mrspeaker/oscillator
 
 ## todo:
 
-"scan aborted"
-"code not found"
-"danger" when bombs start to rotate - blink bombs
-disable click on page
-subtle lunach sounds
-subtle explode sounds
-subtle blow up bombs soound
-only flash the smashed condo when corrupted
-hud showing % of places searched, time passed (slo-mo-time)
-can scan dead buildings with no peice in theme
+TRY THIS: hot/cold indicator of nearby pieces
+Extra voices
+    "scan aborted"
+    "code not found"
+Extra sfx
+    launch missle
+    explode missle
+    explode bombs
+BUG: disable click selection on page
+Add "Danger" sample when bombs start to rotate - blink bombs
+Only flash the smashed condo when corrupted (not all pieces)
+Add a HUD with % of places searched, time passed (slo-mo-time)
+BUG: can scan dead buildings with no piece in theme
+
+### optionals
+TUTORIAL: "shoot the damn bombs" warning if first bombs get too close to ground and no fire
+EFFECT: VHS video tape (or digital glitch) look on bottom of screen
+EFFECT: when found piece, propagate coloured lights on buildings from position clicked
+
+

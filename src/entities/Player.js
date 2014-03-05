@@ -172,6 +172,7 @@
             this.missiles.forEach(function (m) {
                 m.render(gfx);
             });
+            gfx.ctx.setLineDash([0]);
         },
 
         renderFG: function (gfx) {
@@ -181,7 +182,8 @@
             c.fillRect(this.bx - 3, this.by - 1, 6, 3);
 
             // Cursor
-            //c.fillStyle = "hsl(80, 50%, 50%)";
+            //c.lineWidth = 1;
+            //c.strokeStyle = DATA.colours.electric
             c.fillRect(this.x - 2, this.y - 2, 4, 4);
         }
 
