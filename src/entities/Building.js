@@ -1,4 +1,4 @@
-(function (Ω) {
+(function (Ω, DATA) {
 
     "use strict";
 
@@ -48,18 +48,27 @@
 
         render: function (gfx) {
 
-            var c = gfx.ctx;
-            c.fillStyle = this.selected && !this.searched && Ω.utils.toggle(300, 2) ? "#5BD7C4" : "#000";
+            var c = gfx.ctx,
+                COL_on = DATA.colours.nitro,
+                COL_searched = DATA.colours.nitroMute,
+                COL_selected = DATA.colours.satin,
+                COL_off = "#222",
+                COL_edgeHighlight = "#333",
+                isGameOver = this.screen.state.is("DIE");
+
+            c.fillStyle = this.selected && !this.searched && Ω.utils.toggle(300, 2) ?
+                COL_on :
+                (isGameOver && this.hasPiece && !this.searched && Ω.utils.toggle(300, 2) ? DATA.colours.nitroMute : "#000");
             c.save();
-            c.translate(this.x + 10,  this.y + 10);
+            c.translate((this.x | 0) + 10,  (this.y | 0) + 10);
             c.rotate(this.angle);
             c.translate(-10, -10);
             c.fillRect(0, 0, this.w, this.h);
             // If !searched, and selected - flash.
-            c.fillStyle = this.dead ? "#222" : (this.selected ? "#FA5C6F" : (this.searched ? "#3C615F" : "#5BD7C4"));
+            c.fillStyle = this.dead ? COL_off : (this.selected ? COL_selected : (this.searched ? COL_searched : COL_on));
             c.fillRect(0, 0, this.w, 1);
-            c.fillStyle = "#333";
-            c.fillRect(0, 0, 2, this.h);
+            c.fillStyle = COL_edgeHighlight;
+            c.fillRect(0, 1, 2, this.h);
             c.restore();
 
         }
@@ -68,4 +77,4 @@
 
     window.Building = Building;
 
-}(window.Ω));
+}(window.Ω, window.DATA));

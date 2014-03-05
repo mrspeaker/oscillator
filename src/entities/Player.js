@@ -176,10 +176,12 @@
 
         renderFG: function (gfx) {
             var c = gfx.ctx;
-            c.fillStyle = "hsl(200, 90%, 50%)";
+            // Electric man
+            c.fillStyle = DATA.colours.electric;
             c.fillRect(this.bx - 3, this.by - 1, 6, 3);
 
-            c.fillStyle = "hsl(80, 50%, 50%)";
+            // Cursor
+            //c.fillStyle = "hsl(80, 50%, 50%)";
             c.fillRect(this.x - 2, this.y - 2, 4, 4);
         }
 

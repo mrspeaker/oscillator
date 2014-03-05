@@ -1,4 +1,4 @@
-(function (Ω) {
+(function (Ω, DATA) {
 
     "use strict";
 
@@ -36,7 +36,9 @@
             complete: new Ω.Sound("res/audio/programcomplete"),
             welldone: new Ω.Sound("res/audio/welldone"),
             tickle: new Ω.Sound("res/audio/tickle"),
-            tick: new Ω.Sound("res/audio/tick", 0.6)
+            tick: new Ω.Sound("res/audio/tick", 0.6),
+            nope: new Ω.Sound("res/audio/nope", 0.6),
+            theme: new Ω.Sound("res/audio/osctune", 0.4)
         },
 
         selected: null,
@@ -50,6 +52,8 @@
             this.bombs = [];
             this.smokes = [];
             this.lastBomb = 0;
+
+            this.audio.theme.play();
 
             this.state = new Ω.utils.State("BORN");
 
@@ -121,6 +125,8 @@
                     this.selected = room;
                     this.deSelected = false;
                     this.player.goTo(room);
+                } else {
+                    this.audio.nope.play();
                 }
             } else {
                 this.deSelected = true;
@@ -190,6 +196,8 @@
                 break;
             case "DIE":
                 if (this.state.first()) {
+                    this.audio.theme.stop();
+                    this.audio.nope.play();
                     this.voiceOver = "code corrupted. game over.";
                     this.audio.corrupt.play();
                     this.selected.selected = false;
@@ -274,9 +282,13 @@
 
             var c = gfx.ctx;
 
-            this.clear(gfx, "#111419");
+            this.clear(gfx, DATA.colours.dust);
             this.res.bg.render(gfx, 0, 0);
             this.bgfly.render(gfx, this.bgflyPos, 90);
+
+            // c.fillStyle = "#33f";
+            // c.fillRect(0, 100, gfx.w, 5);
+
 
             this.player.renderBG(gfx);
             //this.world.DrawDebugData();
@@ -291,7 +303,12 @@
             this.smokes.forEach(function (s) {
                 s.render(gfx);
             });
+
             this.renderCompy(gfx);
+
+            c.fillStyle = DATA.colours.nitroMute;
+            c.fillRect(0, 220, gfx.w, 1);
+
 
             this.renderCode(gfx);
             this.player.renderFG(gfx);
@@ -321,10 +338,8 @@
                 c = gfx.ctx;
 
             c.fillStyle = "#000";
-            //c.strokeStyle = "#444";
             c.fillRect(puterX, puterY, puterW, puterH);
-            //c.strokeRect(puterX, puterY, puterW, puterH);
-            c.fillStyle = "#FA5C6F";//"#FFCF5B";
+            c.fillStyle = DATA.colours.satin;
             c.font = "8pt monospace";
 
             var msgs = this.player.puterMsg;
@@ -348,9 +363,9 @@
 
             for (var i = 0; i < this.pieces.length; i++) {
                 var t = this.pieces[i];
-                c.fillStyle = t && (Ω.utils.since(t) > 2000 || Ω.utils.toggle(200, 2)) ? "#FA5C6F" : "#24343B";
+                c.fillStyle = t && (Ω.utils.since(t) > 2000 || Ω.utils.toggle(200, 2)) ? DATA.colours.satin : DATA.colours.nitroMute;
                 if (this.state.is("WIN") && !(Ω.utils.toggle(200, 2))) {
-                    c.fillStyle = "#24343B";
+                    c.fillStyle = DATA.colours.nitroMute;
                 }
                 c.fillRect(ps[i], sy, ws[i], sh);
             }
@@ -383,4 +398,4 @@
 
     window.MainScreen = MainScreen;
 
-}(window.Ω));
+}(window.Ω, window.DATA));

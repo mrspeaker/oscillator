@@ -19,15 +19,15 @@
         init: function (x, y, tx, ty) {
             this._super(x, y);
 
-            this.trails = [],
+            this.trails = [];
             this.count = 0;
 
             this.sx = x;
             this.sy = y;
-            this.tx = tx;
-            this.ty = ty;
+            this.tx = tx | 0;
+            this.ty = ty | 0;
 
-            var angle = Ω.utils.angleBetween({x:tx, y:ty},{x:x, y:y});
+            var angle = Ω.utils.angleBetween({x:this.tx, y:this.ty}, {x:x, y:y});
             this.xSpeed = this.speed * Math.cos(angle);
             this.ySpeed = this.speed * Math.sin(angle);
         },
@@ -55,20 +55,22 @@
         },
 
         render: function (gfx) {
-            var c = gfx.ctx;
+            var c = gfx.ctx,
+                x = Math.round(this.x),
+                y = Math.round(this.y);
 
-            c.strokeStyle = "#FF5BA6";
-            c.setLineDash([2,2]);
+            c.strokeStyle = DATA.colours.satin;
+            c.setLineDash([3,3]);
             c.beginPath();
             c.moveTo(this.sx, this.sy);
-            c.lineTo(this.x + this.w / 2, this.y + this.h / 2);
+            c.lineTo(x + this.w / 2, y + this.h / 2);
             c.stroke();
             c.fillStyle = "#282828";
             if (!this.exploding) {
-                c.fillRect(this.x, this.y, this.w, this.h);
+                c.fillRect(x, y, this.w, this.h);
             } else {
                 c.beginPath();
-                c.arc(this.x + this.w / 2 , this.y + this.h / 2 , this.rad, 0, Math.PI * 2);
+                c.arc(x + this.w / 2 , y + this.h / 2 , this.rad, 0, Math.PI * 2);
                 c.fill();
             }
 
