@@ -54,9 +54,10 @@
                 COL_selected = DATA.colours.satin,
                 COL_off = "#222",
                 COL_edgeHighlight = "#333",
-                isGameOver = this.screen.state.is("DIE");
+                isGameOver = this.screen.state.is("DIE"),
+                flashBuilding = this.selected && !this.searched && Ω.utils.toggle(300, 2);
 
-            c.fillStyle = this.selected && !this.searched && Ω.utils.toggle(300, 2) ?
+            c.fillStyle = flashBuilding ?
                 COL_on :
                 (isGameOver && this.hasPiece && !this.searched && this.dead > 0.1 && Ω.utils.toggle(150, 2) ?
                     DATA.colours.nitroMute :
@@ -69,8 +70,8 @@
             // If !searched, and selected - flash.
             c.fillStyle = this.dead ? COL_off : (this.selected ? COL_selected : (this.searched ? COL_searched : COL_on));
             c.fillRect(0, 0, this.w, 1);
-            c.fillStyle = COL_edgeHighlight;
-            c.fillRect(0, 1, 2, this.h);
+            c.fillStyle = flashBuilding ? COL_on : COL_edgeHighlight;
+            c.fillRect(0, 1, 2, this.h - 1);
             c.restore();
 
         }

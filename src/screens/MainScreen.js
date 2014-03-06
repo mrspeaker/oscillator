@@ -155,7 +155,7 @@
             switch (this.state.get()) {
             case "BORN":
                 if (this.state.first()) {
-                    this.voiceOver = "search for codes fragments";
+                    this.voiceOver = "search for code fragments";
                 }
                 if (this.state.count == 25) {
                     this.audio.tickle.play();
@@ -173,11 +173,10 @@
             case "RUNNING":
                 //if (this.bombTime < 50) { this.bombTime = 50; }
                 if (++this.count - this.lastBomb > this.bombTime) {
-                    console.log(this.count, this.bombTime);
                     if (this.firstBomb) {
                         this.firstBomb = false;
-                        this.voiceOver = "incoming projectiles. fire!";
-                        this.voiceOverCount = 100;
+                        this.voiceOver = "incoming anomaly. fire!";
+                        this.voiceOverCount = 130;
                         this.audio.warning.play();
                     }
                     this.addBomb();

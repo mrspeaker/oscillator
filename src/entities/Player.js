@@ -76,7 +76,7 @@
                 break;
             case "SCANROOM":
                 if (this.state.first()) {
-                    this.puterMsg = ["> PLEASE WAIT... SCANNING CONDO."];
+                    this.puterMsg = ["> PLEASE WAIT... SCANNING AREA."];
                 }
                 if (this.state.count > 60) {
                     this.state.set("INROOM");
@@ -84,7 +84,7 @@
                 break;
             case "INROOM":
                 if (this.state.first()) {
-                    this.puterMsg.push("HAS COMPUTER? " + (this.room.hasComputer ? "Y" : "N"));
+                    this.puterMsg.push("CONTAINS COMPUTER? " + (this.room.hasComputer ? "Y" : "N"));
                     if (!this.room.hasComputer) {
                         this.room.searched = true;
                     }
