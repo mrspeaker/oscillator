@@ -90,6 +90,7 @@
                 room.hasComputer = true;
                 if (k < numPieces) {
                     room.hasPiece = true;
+                    room.hadPiece = true;
                 }
             }
 
@@ -124,7 +125,7 @@
                     room.select();
                     this.selected = room;
                     this.deSelected = false;
-                    this.player.goTo(room);
+                    this.player.goTo(room, this.getDistToPiece(room));
                 } else {
                     this.audio.nope.play();
                 }
@@ -275,6 +276,16 @@
                     Ω.utils.rand(0, 100) / 100);
                 this.smokes.push(s);
             }
+        },
+
+        getDistToPiece: function (piece) {
+            return this.buildings.filter(function (b) {
+                return b.hasPiece && !b.searched;
+            }).map(function (b) {
+                return Ω.utils.dist(piece, b).toFixed(0);
+            }).sort(function (a, b) {
+                return a - b;
+            })[0];
         },
 
         render: function (gfx) {

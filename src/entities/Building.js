@@ -17,6 +17,10 @@
 
         hasComputer: false,
         hasPiece: false,
+        hadPiece: false,
+
+        hintTime: 0,
+        hintDist: 0,
 
         init: function (world, x, y, col, row, screen) {
             this.body = (window.Physics.createBox(world, x, y, 1, 1)).GetBody();
@@ -42,8 +46,15 @@
                     this.screen.lostPiece();
                 }
             }
+            this.hintTime--;
             this.x = pos.x * 20 - 10;
             this.y = pos.y * 20 - 10;
+        },
+
+        giveHint: function (dist) {
+            this.hintTime = 100;
+            this.hintDist = dist;
+            console.log(180 * dist | 0, dist, this.hadPiece);
         },
 
         render: function (gfx) {
@@ -62,6 +73,7 @@
                 (isGameOver && this.hasPiece && !this.searched && this.dead > 0.1 && Ω.utils.toggle(150, 2) ?
                     DATA.colours.nitroMute :
                     "#000");
+
             c.save();
             c.translate((this.x | 0) + 10,  (this.y | 0) + 10);
             c.rotate(this.angle);
@@ -70,6 +82,14 @@
             // If !searched, and selected - flash.
             c.fillStyle = this.dead ? COL_off : (this.selected ? COL_selected : (this.searched ? COL_searched : COL_on));
             c.fillRect(0, 0, this.w, 1);
+
+            if (this.hintTime > 0 && !this.hadPiece) {
+                c.fillStyle = "hsla(" + (180 * this.hintDist | 0) + ",50%, 40%, " + (this.hintTime / 100) + ")";
+                c.beginPath();
+                c.arc(11, 10, 4, 0, Math.PI * 2, false);
+                c.fill();
+            }
+
             c.fillStyle = flashBuilding ? COL_on : COL_edgeHighlight;
             c.fillRect(0, 1, 2, this.h - 1);
             c.restore();

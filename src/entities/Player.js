@@ -86,7 +86,7 @@
                 if (this.state.first()) {
                     this.puterMsg.push("CONTAINS COMPUTER? " + (this.room.hasComputer ? "Y" : "N"));
                     if (!this.room.hasComputer) {
-                        this.room.searched = true;
+                        this.searchComplete(false);
                     }
                 }
                 if (this.state.count === 40) {
@@ -117,7 +117,9 @@
                         this.screen.checkPieces();
                     }
                     this.puterMsg.push("FOUND CODE? " + (this.room.hasPiece ? "Y" : "N"));
+                    var hadPiece = false;
                     if (this.room.hasPiece) {
+                        this.hadPiece = true;
                         if (this.numPieces < 5) {
                             this.audio.located.play();
                         }
@@ -125,7 +127,7 @@
                         this.audio.notfound.play();
                     }
                     this.room.hasPiece = false;
-                    this.room.searched = true;
+                    this.searchComplete(hadPiece);
                 }
                 if (this.state.count == 40) {
                     this.puterMsg.push("");
@@ -157,13 +159,21 @@
 
         },
 
+        searchComplete: function (found) {
+            this.room.searched = true;
+            if (!found) {
+                this.room.giveHint(this.lastDistanceToPiece);
+            }
+        },
+
         die: function () {
             this.state.set("DIE");
             this.puterMsg = [""];
         },
 
-        goTo: function (room) {
+        goTo: function (room, distanceToPiece) {
             this.lastRoom = this.room;
+            this.lastDistanceToPiece = 1 - (Math.max(1, Math.min(120, distanceToPiece)) / 120);
             this.room = room;
             this.state.set("ROOMSELECTED");
         },
