@@ -21,12 +21,13 @@
         smokes: null,
         count: 0,
 
+        shake: null,
+
         bgflyPos: 500,
-        bgfly: new Ω.Image("res/images/truc.png", null, 0.3),
 
         res: {
             bg: new Ω.Image("res/images/bg.png", null, 0.5),
-            scanlines: new Ω.Image("res/images/scanlines.png", null, 0.5),
+            bgfly: new Ω.Image("res/images/truc.png", null, 0.3),
         },
 
         audio: {
@@ -36,7 +37,7 @@
             complete: new Ω.Sound("res/audio/programcomplete"),
             welldone: new Ω.Sound("res/audio/welldone"),
             tickle: new Ω.Sound("res/audio/tickle"),
-            tick: new Ω.Sound("res/audio/tick", 0.6),
+            tick: new Ω.Sound("res/audio/tick", 0.5),
             nope: new Ω.Sound("res/audio/nope", 0.6),
             theme: new Ω.Sound("res/audio/osctune", 0.4, true)
         },
@@ -69,10 +70,9 @@
             var numColums = 8,
                 numComputers = 15,
                 numPieces = this.pieces.length,
-                colH = [7, 6, 4, 5, 5, 6, 7, 7].sort(function () { return 0.5 - Math.random(); });
+                colH = [7, 6, 6, 5, 5, 6, 8, 7].sort(function () { return 0.5 - Math.random(); });
 
             for (var j = 0; j < numColums; j++) {
-                //var h = (Math.random() * 3 | 0) + 5;
                 var h = colH[j];
                 for (var i = 0; i < h; i++) {
                     this.buildings.push(
@@ -118,7 +118,9 @@
 
             if (room && room.type == "BUILDING") {
                 this.audio.tick.play();
-                if (!room.searched) {
+                if (room.dead || room.searched) {
+                    this.audio.nope.play();
+                } else {
                     if (this.selected) {
                         this.selected.selected = false;
                     }
@@ -126,8 +128,6 @@
                     this.selected = room;
                     this.deSelected = false;
                     this.player.goTo(room, this.getDistToPiece(room));
-                } else {
-                    this.audio.nope.play();
                 }
             } else {
                 this.deSelected = true;
@@ -172,7 +172,6 @@
                 }
                 break;
             case "RUNNING":
-                //if (this.bombTime < 50) { this.bombTime = 50; }
                 if (++this.count - this.lastBomb > this.bombTime) {
                     if (this.firstBomb) {
                         this.firstBomb = false;
@@ -239,6 +238,10 @@
             this.buildings.forEach(function (b) {
                 b.tick();
             });
+            if (this.shake && !this.shake.tick()) {
+                this.shake = null;
+            }
+
             var self = this;
             this.bombs.forEach(function (b) {
                 var alive = b.tick();
@@ -247,6 +250,7 @@
                         if (m.exploding) {
                             var dist = Ω.utils.distCenter(b, m);
                             if (dist < m.rad) {
+                                self.shake = new Ω.Shake(30, 6);
                                 b.disactivate();
                                 self.smokey(b);
                             }
@@ -278,38 +282,48 @@
             }
         },
 
+        distCenterSquished: function (a, b) {
+
+            var dx = (a.x / 4 + (a.w / 2)) - (b.x / 4 + (b.w / 2)),
+                dy = (a.y + (a.h / 2)) - (b.y + (b.h / 2));
+
+            return Math.sqrt(dx * dx + dy * dy);
+
+        },
+
         getDistToPiece: function (piece) {
-            return this.buildings.filter(function (b) {
+            var dist = this.distCenterSquished;
+            var all = this.buildings.filter(function (b) {
                 return b.hasPiece && !b.searched;
             }).map(function (b) {
-                return Ω.utils.dist(piece, b).toFixed(0);
+                return dist(piece, b) | 0;
             }).sort(function (a, b) {
                 return a - b;
-            })[0];
+            });
+            return all[0];
         },
 
         render: function (gfx) {
 
-            var c = gfx.ctx;
+            var c = gfx.ctx,
+                grd,
+                col;
+
+            c.save();
+
+            this.shake && this.shake.render(gfx);
 
             this.clear(gfx, DATA.colours.dust);
+
             this.res.bg.render(gfx, 0, 0);
-            this.bgfly.render(gfx, this.bgflyPos, 90);
+            this.res.bgfly.render(gfx, this.bgflyPos, 90);
 
             // add linear gradient
-            var grd = c.createLinearGradient(gfx.w / 2, 140, gfx.w / 2, 190);
+            grd = c.createLinearGradient(gfx.w / 2, 140, gfx.w / 2, 190);
             grd.addColorStop(0, 'rgba(0,0,0,0)');
             grd.addColorStop(1, 'rgba(17, 17, 119, 0.5)');
             c.fillStyle = grd;
-            //c.fill();
-            //c.fillStyle = "#117";
             c.fillRect(0, 140, gfx.w, 50);
-
-            /*c.fillStyle = "#3f3";
-            c.fillRect(0, 120, gfx.w, 5);
-
-            c.fillStyle = "#f33";
-            c.fillRect(0, 140, gfx.w, 5);*/
 
             this.player.renderBG(gfx);
             //this.world.DrawDebugData();
@@ -336,10 +350,9 @@
             var state = this.state.get();
 
             if (state === "DIE" || state === "WIN") {
-                var grd = c.createRadialGradient(gfx.w / 2, gfx.h / 2, 0, gfx.w / 2, gfx.h /2, 400);
-
+                grd = c.createRadialGradient(gfx.w / 2, gfx.h / 2, 0, gfx.w / 2, gfx.h /2, 400);
                 grd.addColorStop(0, "rgba(0, 0, 0, 0)");
-                var col = state === "DIE" ? "0,80%,8%" : (this.state.count % 360 | 0) + ",50%,30%";
+                col = state === "DIE" ? "0,80%,8%" : (this.state.count % 360 | 0) + ",50%,30%";
                 grd.addColorStop(1, "hsla(" + col + ",0.4)");
 
                 c.fillStyle = grd;
@@ -348,6 +361,9 @@
             }
 
             this.renderVoiceOver(gfx);
+
+            c.restore();
+
 
         },
 
@@ -369,8 +385,6 @@
                     c.fillText(msg, puterX + 5, puterY + (i + 1) * 10 + 5);
                 }
             });
-
-            //this.res.scanlines.render(gfx, puterX, puterY);
         },
 
         renderCode: function (gfx) {
@@ -397,19 +411,19 @@
         },
 
         renderVoiceOver: function (gfx) {
-            var c = gfx.ctx;
-
             if (!this.voiceOver) {
                 return;
             }
 
-            var x = gfx.w / 2 - (this.voiceOver.length * 4),
+            var c = gfx.ctx,
+                x = gfx.w / 2 - (this.voiceOver.length * 4),
                 y = gfx.h / 2 - 16;
 
             c.strokeStyle = "#333";
             c.fillStyle = "rgb(0, 0, 0)";
             c.fillRect(x - 10, y - 10, this.voiceOver.length * 8 + 20, 32);
             c.strokeRect(x - 10, y - 10, this.voiceOver.length * 8 + 20, 32);
+
             if (Ω.utils.toggle(300, 2)) {
                 this.font.render(gfx, this.voiceOver, x, y);
             }

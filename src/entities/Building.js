@@ -54,7 +54,6 @@
         giveHint: function (dist) {
             this.hintTime = 100;
             this.hintDist = dist;
-            console.log(180 * dist | 0, dist, this.hadPiece);
         },
 
         render: function (gfx) {
@@ -73,6 +72,9 @@
                 (isGameOver && this.hasPiece && !this.searched && this.dead > 0.1 && Ω.utils.toggle(150, 2) ?
                     DATA.colours.nitroMute :
                     "#000");
+            /*if (this.hasPiece) {
+                c.fillStyle = "#333";
+            }*/
 
             c.save();
             c.translate((this.x | 0) + 10,  (this.y | 0) + 10);
@@ -85,9 +87,11 @@
 
             if (this.hintTime > 0 && !this.hadPiece) {
                 c.fillStyle = "hsla(" + (180 * this.hintDist | 0) + ",50%, 40%, " + (this.hintTime / 100) + ")";
+                c.strokeStyle = "hsla(" + (180 * this.hintDist | 0) + ",50%, 40%, " + ((this.hintTime * 2 )/ 100) + ")";
                 c.beginPath();
                 c.arc(11, 10, 4, 0, Math.PI * 2, false);
                 c.fill();
+                c.stroke();
             }
 
             c.fillStyle = flashBuilding ? COL_on : COL_edgeHighlight;

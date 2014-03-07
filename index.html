@@ -43,14 +43,13 @@
     <script src="src/screens/TitleScreen.js"></script>
     <script src="src/screens/MainScreen.js"></script>
     <script>
+
         var game = new OmegaGame(750, 300);
 
         document
             .querySelector("#fs")
             .addEventListener("click", function () {
-
                 Ω.utils.fullscreen.toggle("#board");
-
             }, false);
     </script>
 

@@ -142,6 +142,7 @@
                 if (this.screen.deSelected) {
                     // If in the screen, fire.
                     if (this.x > 0 && this.x < Ω.env.w && this.y > 0 && this.y < 218) {
+                        this.screen.shake = new Ω.Shake(3, 2);
                         this.missiles.push(
                             new Missile(this.screen.selected.x + 10, this.screen.selected.y + 10, this.x, this.y)
                         );
@@ -173,7 +174,7 @@
 
         goTo: function (room, distanceToPiece) {
             this.lastRoom = this.room;
-            this.lastDistanceToPiece = 1 - (Math.max(1, Math.min(120, distanceToPiece)) / 120);
+            this.lastDistanceToPiece = 1 - (Math.max(1, Math.min(80, distanceToPiece)) / 80);
             this.room = room;
             this.state.set("ROOMSELECTED");
         },
