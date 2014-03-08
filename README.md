@@ -12,7 +12,6 @@ on GitHub: https://github.com/mrspeaker/oscillator
 
 ## todo:
 
-TRY THIS: hot/cold indicator of nearby pieces
 Extra voices
     "scan aborted"
     "code not found"
@@ -21,6 +20,8 @@ Extra sfx
     launch missle
     explode missle
     explode bombs
+    hackery S&H sounds when scanning
+
 Add "Danger" sample when bombs start to rotate - blink bombs
 Add a HUD with % of places searched, time passed (slo-mo-time)
 Make the "radar dots" look like radars or something.

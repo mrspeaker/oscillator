@@ -25,7 +25,6 @@
         render: function (gfx) {
             var c = gfx.ctx;
             c.font = "20pt helvetica";
-            c.fillStyle = "#FF5BA6";
             this.font.render(gfx, "oscillator", gfx.w / 2, gfx.h / 2);
         }
 

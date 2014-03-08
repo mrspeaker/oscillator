@@ -26,8 +26,9 @@
         bgflyPos: 500,
 
         res: {
-            bg: new Ω.Image("res/images/bg.png", null, 0.5),
+            bg: new Ω.Image("res/images/allbg.png", null, 0.4),
             bgfly: new Ω.Image("res/images/truc.png", null, 0.3),
+            scratch: new Ω.Image("res/images/scratchscreen.png", null, 0.4)
         },
 
         audio: {
@@ -79,6 +80,7 @@
                         new Building(this.world, j * 4 + 4, numColums - (i * 1) + 2, j, i, this)
                     );
                     this.buildings[this.buildings.length - 1].id = j * 8 + i;
+                    this.buildings[this.buildings.length - 1].flash(10 + i * 5 + j * 1, 10);
                 }
             }
 
@@ -291,16 +293,30 @@
 
         },
 
-        getDistToPiece: function (piece) {
+        getDistToPieces: function (piece) {
             var dist = this.distCenterSquished;
-            var all = this.buildings.filter(function (b) {
+            return this.buildings.filter(function (b) {
                 return b.hasPiece && !b.searched;
             }).map(function (b) {
                 return dist(piece, b) | 0;
             }).sort(function (a, b) {
                 return a - b;
             });
-            return all[0];
+
+        },
+
+
+        getDistToPiece: function (piece) {
+
+            return this.getDistToPieces(piece)[0];
+        },
+
+        located: function (room) {
+            var dist = this.distCenterSquished;
+            this.buildings.map(function (b) {
+                var d = dist(room, b);
+                b.flash(d / 3 | 0, 15);
+            });
         },
 
         render: function (gfx) {
@@ -341,9 +357,6 @@
 
             this.renderCompy(gfx);
 
-            c.fillStyle = DATA.colours.nitroMute;
-            c.fillRect(0, 220, gfx.w, 1);
-
 
             this.renderCode(gfx);
             this.player.renderFG(gfx);
@@ -374,8 +387,8 @@
                 puterH = 60,
                 c = gfx.ctx;
 
-            c.fillStyle = "#000";
-            c.fillRect(puterX, puterY, puterW, puterH);
+            /*c.fillStyle = "#000";
+            c.fillRect(puterX, puterY, puterW, puterH);*/
             c.fillStyle = DATA.colours.satin;
             c.font = "8pt monospace";
 
@@ -385,6 +398,8 @@
                     c.fillText(msg, puterX + 5, puterY + (i + 1) * 10 + 5);
                 }
             });
+
+            this.res.scratch.render(gfx, puterX, puterY);
         },
 
         renderCode: function (gfx) {
@@ -405,9 +420,9 @@
                 c.fillRect(ps[i], sy, ws[i], sh);
             }
 
-            titles.forEach(function (t, i) {
+            /*titles.forEach(function (t, i) {
                 this.font.render(gfx, t, ps[i], titleY);
-            }, this);
+            }, this);*/
         },
 
         renderVoiceOver: function (gfx) {

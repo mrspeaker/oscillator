@@ -122,6 +122,7 @@
                         this.hadPiece = true;
                         if (this.numPieces < 5) {
                             this.audio.located.play();
+                            this.screen.located(this.room);
                         }
                     } else {
                         this.audio.notfound.play();
@@ -142,7 +143,6 @@
                 if (this.screen.deSelected) {
                     // If in the screen, fire.
                     if (this.x > 0 && this.x < Ω.env.w && this.y > 0 && this.y < 218) {
-                        this.screen.shake = new Ω.Shake(3, 2);
                         this.missiles.push(
                             new Missile(this.screen.selected.x + 10, this.screen.selected.y + 10, this.x, this.y)
                         );
