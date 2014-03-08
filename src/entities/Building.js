@@ -115,7 +115,7 @@
             c.fillRect(0, 0, this.w, 1);
 
             if (!(this.searched || this.dead)) {
-                this.sheet.render(gfx, this.row % 4, this.col % 3, 0, 0);
+                this.sheet.render(gfx, this.row % 5, this.col % 2, 0, 0);
             }
 
             if (this.hintTime > 0 && !this.hadPiece) {

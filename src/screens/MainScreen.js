@@ -315,7 +315,7 @@
             var dist = this.distCenterSquished;
             this.buildings.map(function (b) {
                 var d = dist(room, b);
-                b.flash(d / 3 | 0, 15);
+                b.flash(((d * d) / 300) | 0, 20);
             });
         },
 
@@ -335,11 +335,11 @@
             this.res.bgfly.render(gfx, this.bgflyPos, 90);
 
             // add linear gradient
-            grd = c.createLinearGradient(gfx.w / 2, 140, gfx.w / 2, 190);
+            /*grd = c.createLinearGradient(gfx.w / 2, 140, gfx.w / 2, 190);
             grd.addColorStop(0, 'rgba(0,0,0,0)');
             grd.addColorStop(1, 'rgba(17, 17, 119, 0.5)');
             c.fillStyle = grd;
-            c.fillRect(0, 140, gfx.w, 50);
+            c.fillRect(0, 140, gfx.w, 50);*/
 
             this.player.renderBG(gfx);
             //this.world.DrawDebugData();
