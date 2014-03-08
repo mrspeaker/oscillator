@@ -34,6 +34,7 @@
         audio: {
             warning: new Ω.Sound("res/audio/warning"),
             danger: new Ω.Sound("res/audio/danger"),
+            expl: new Ω.Sound("res/audio/expl2", 0.4),
             corrupt: new Ω.Sound("res/audio/codecorrupted"),
             complete: new Ω.Sound("res/audio/programcomplete"),
             welldone: new Ω.Sound("res/audio/welldone"),
@@ -252,7 +253,8 @@
                         if (m.exploding) {
                             var dist = Ω.utils.distCenter(b, m);
                             if (dist < m.rad) {
-                                self.shake = new Ω.Shake(30, 6);
+                                self.shake = new Ω.Shake(30, 5);
+                                self.audio.expl.play();
                                 b.disactivate();
                                 self.smokey(b);
                             }

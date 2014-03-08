@@ -21,7 +21,10 @@
         audio: {
             located: new Ω.Sound("res/audio/codelocated"),
             notfound: new Ω.Sound("res/audio/notfound"),
-            scanning: new Ω.Sound("res/audio/scanning")
+            scanning: new Ω.Sound("res/audio/scanning"),
+            hack: new Ω.Sound("res/audio/hack", 0.6),
+            get: new Ω.Sound("res/audio/get", 0.6),
+            fire1: new Ω.Sound("res/audio/fire", 0.35)
 
         },
 
@@ -106,6 +109,9 @@
                     this.audio.scanning.play();
                     this.puterMsg.push("SCANNING COMPUTER");
                 }
+                if (this.state.count == 20){
+                    this.audio.hack.play();
+                }
                 if (this.state.count > 100) {
                     this.state.set("INCOMPUTER");
                 }
@@ -122,6 +128,7 @@
                         this.hadPiece = true;
                         if (this.numPieces < 5) {
                             this.audio.located.play();
+                            this.audio.get.play();
                             this.screen.located(this.room);
                         }
                     } else {
@@ -146,6 +153,7 @@
                         this.missiles.push(
                             new Missile(this.screen.selected.x + 10, this.screen.selected.y + 10, this.x, this.y)
                         );
+                        this.audio.fire1.play();
                         if (Ω.utils.since(this.lastMissile) > 100) {
 //                            this.audio.fire.play();
                             this.lastMissile = Ω.utils.now();
