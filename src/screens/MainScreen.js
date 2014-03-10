@@ -414,7 +414,7 @@
                 }
             });
 
-            this.res.scratch.render(gfx, puterX, puterY);
+            //this.res.scratch.render(gfx, puterX, puterY);
         },
 
         renderCode: function (gfx) {

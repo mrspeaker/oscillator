@@ -20,7 +20,7 @@
             bombInitialDelay: 500,
             bombPieceDelay: 15, // Reduce bomb delay when peice found
             bombLaunchedDelay: 10, // reduce bomb dealy when bomb launched
-            bombMinimumDelay: 40
+            bombMinimumDelay: 50
         }
     };
 

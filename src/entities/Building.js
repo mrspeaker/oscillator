@@ -89,33 +89,32 @@
                 COL_off = "#222",
                 COL_edgeHighlight = "#333",
                 isGameOver = this.screen.state.is("DIE"),
-                flashBuilding = this.selected && !this.searched && Ω.utils.toggle(300, 2);
+                flashBuilding = this.selected && !this.searched && Ω.utils.toggle(300, 2),
+                x = this.x | 0,
+                y = this.y | 0;
 
             c.fillStyle = flashBuilding ?
                 COL_on :
                 (isGameOver && this.hasPiece && !this.searched && this.dead > 0.1 && Ω.utils.toggle(150, 2) ?
                     DATA.colours.nitroMute :
                     "#000");
-            /*if (this.hasPiece) {
-                c.fillStyle = "#333";
-            }*/
 
             c.save();
-            c.translate((this.x | 0) + 10,  (this.y | 0) + 10);
+            c.translate(x + 10,  y + 10);
             c.rotate(this.angle);
             c.translate(-10, -10);
             c.fillRect(0, 0, this.w, this.h);
-            // If !searched, and selected - flash.
 
             c.fillStyle = this.dead ? COL_off : (this.selected ? COL_selected : (this.searched ? COL_searched : COL_on));
+            // Flash it all.
             if (this.kit.delay < 0 && this.kit.count) {
                 c.fillStyle = this.kit.color;
             }
 
             c.fillRect(0, 0, this.w, 1);
 
-            if (!(this.searched || this.dead)) {
-                this.sheet.render(gfx, this.row % 5, this.col % 2, 0, 0);
+            if (!(this.searched || this.dead || flashBuilding)) {
+                this.sheet.render(gfx, this.row % 4, this.col % 2, 0, 0);
             }
 
             if (this.hintTime > 0 && !this.hadPiece) {
