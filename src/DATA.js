@@ -10,7 +10,17 @@
             nitroMute: "#0E5E50",
             satin: "#FC55F5",
             dust: "#052229",
-            electric: "#33FBDA"
+            electric: "#33FBDA",
+            baddream: "#FC5154"
+        },
+        times: {
+            scanningRoom: 100,
+            scanningComputer: 80,
+
+            bombInitialDelay: 500,
+            bombPieceDelay: 15, // Reduce bomb delay when peice found
+            bombLaunchedDelay: 10, // reduce bomb dealy when bomb launched
+            bombMinimumDelay: 20
         }
     };
 

@@ -16,7 +16,7 @@
         voiceOverCount: 0,
 
         pieces: null,
-        bombTime: 500,
+        bombTime: DATA.times.bombInitialDelay,
         lastBomb: null,
         smokes: null,
         count: 0,
@@ -108,7 +108,11 @@
             if (this.player.numPieces === this.pieces.length) {
                 this.state.set("WIN");
             }
-            this.bombTime -= 15;
+            this.reduceBombDelay(DATA.times.bombPieceDelay);
+        },
+
+        reduceBombDelay: function (amount) {
+            this.bombTime = Math.max(DATA.times.bombMinimumDelay, this.bombTime - amount);
         },
 
         select: function (body) {
@@ -148,7 +152,7 @@
             var x = (Math.random() * 8 | 0) * 4 + 2;
             this.bombs.push(new Bomb(this.world, x - 0.2, -3, this));
             this.bombs.push(new Bomb(this.world, x + 0.2, -1, this));
-            this.bombTime -= 10;
+            this.reduceBombDelay(DATA.times.bombLaunchedDelay);
         },
 
         tick: function () {
@@ -189,6 +193,7 @@
                     this.voiceOver = "";
                 }
 
+                // Move the lil' background blip. ToDO: background activity
                 this.bgflyPos -= 0.4;
                 if (this.bgflyPos < -20) {
                     this.bgflyPos = Ω.env.w + 10;
@@ -253,7 +258,7 @@
                         if (m.exploding) {
                             var dist = Ω.utils.distCenter(b, m);
                             if (dist < m.rad) {
-                                self.shake = new Ω.Shake(30, 5);
+                                //self.shake = new Ω.Shake(30, 5);
                                 self.audio.expl.play();
                                 b.disactivate();
                                 self.smokey(b);

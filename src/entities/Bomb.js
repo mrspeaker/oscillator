@@ -14,6 +14,8 @@
 
         count: 0,
 
+        danger: false,
+
         init: function (world, x, y, screen) {
             this.body = (window.Physics.createCircle(world, x, y, 0.5)).GetBody();
             this.body.SetUserData(this);
@@ -26,6 +28,10 @@
             this.angle = this.body.GetAngle();
             this.x = pos.x * 20 - 5;
             this.y = pos.y * 20 - 5;
+
+            if (this.angle !== 0) {
+                this.danger = true;
+            }
 
             if (this.count++ === 140 && this.screen.state.isNotIn("DIE", "WIN")) {
                 this.audio.play();
@@ -48,7 +54,7 @@
             c.rotate(this.angle);
             c.translate(-5, -5);
             c.fillRect(0, 0, this.w, this.h);
-            c.fillStyle = "#FC5154";
+            c.fillStyle = this.danger && Ω.utils.toggle(400, 2) ? "#222" : DATA.colours.baddream;
             c.fillRect(0, this.h - 1, this.w, 1);
 
             c.fillStyle = "#444";

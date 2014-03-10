@@ -1,5 +1,7 @@
 # Oscillator
 
+sYSstem errOr. oscilLate and trY aGaIN.
+
 by Mr Speaker
 
     t: @mrspeaker
@@ -13,7 +15,22 @@ on GitHub: https://github.com/mrspeaker/oscillator
 ## todo:
 
 Balancing
+Re-export bg at 40%
+Remove or slow down shake
+Tunes
+    game over theme
+    win theme
+Add "warning" sample, or "hit" sound when bombs start to rotate - blink bombs
 
+### optionals
+
+Make the "radar dots" look like radars or something.
+Add a HUD with % of places searched, time passed (slo-mo-time)
+TUTORIAL: "shoot the damn bombs" warning if first bombs get too close to ground and no fire
+Add touch support
+EFFECT: on success, explode bombs
+background action
+EFFECT: VHS video tape (or digital glitch) look on bottom of screen
 Extra voices
     "scan aborted"
     "code not found"
@@ -21,17 +38,3 @@ Extra voices
 
 Extra sfx
     explode missle
-    game over theme
-    win theme
-
-Add "Danger" sample, or "hit" sound when bombs start to rotate - blink bombs
-Add a HUD with % of places searched, time passed (slo-mo-time)
-Make the "radar dots" look like radars or something.
-
-### optionals
-
-TUTORIAL: "shoot the damn bombs" warning if first bombs get too close to ground and no fire
-Add touch support
-EFFECT: on success, explode bombs
-background action
-EFFECT: VHS video tape (or digital glitch) look on bottom of screen

@@ -81,7 +81,7 @@
                 if (this.state.first()) {
                     this.puterMsg = ["> PLEASE WAIT... SCANNING AREA."];
                 }
-                if (this.state.count > 120) {
+                if (this.state.count > DATA.times.scanningRoom) {
                     this.state.set("INROOM");
                 }
                 break;
@@ -112,7 +112,7 @@
                 if (this.state.count == 20){
                     this.audio.hack.play();
                 }
-                if (this.state.count > 100) {
+                if (this.state.count > DATA.times.scanningComputer) {
                     this.state.set("INCOMPUTER");
                 }
                 break;
