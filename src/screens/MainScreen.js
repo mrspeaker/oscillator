@@ -263,10 +263,10 @@
                 var alive = b.tick();
                 if (alive) {
                     self.player.missiles.forEach(function (m) {
-                        if (m.exploding) {
+                        if (m.exploding && m.explodeTime >= 0) {
                             var dist = Ω.utils.distCenter(b, m);
                             if (dist < m.rad) {
-                                //self.shake = new Ω.Shake(30, 5);
+                                self.shake = new Ω.Shake(30, 3);
                                 self.audio.expl.play();
                                 b.deactivate();
                                 self.smokey(b);

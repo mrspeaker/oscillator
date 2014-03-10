@@ -16,17 +16,16 @@ on GitHub: https://github.com/mrspeaker/oscillator
 
 Balancing
 Re-export bg at 40%
-Remove or slow down shake
-Add "warning" sample, or "hit" sound when bombs start to rotate - blink bombs
 tint font correctly
 
 ### optionals
 
+EFFECT: on success, explode bombs
+better missile exlosion
 Make the "radar dots" look like radars or something.
 Add a HUD with % of places searched, time passed (slo-mo-time)
 TUTORIAL: "shoot the damn bombs" warning if first bombs get too close to ground and no fire
 Add touch support
-EFFECT: on success, explode bombs
 background action
 EFFECT: VHS video tape (or digital glitch) look on bottom of screen
 Extra voices

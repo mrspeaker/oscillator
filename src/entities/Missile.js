@@ -16,6 +16,8 @@
 
         trails: null,
 
+        detonation: null,
+
         init: function (x, y, tx, ty) {
             this._super(x, y);
 
@@ -30,6 +32,7 @@
             var angle = Ω.utils.angleBetween({x:this.tx, y:this.ty}, {x:x, y:y});
             this.xSpeed = this.speed * Math.cos(angle);
             this.ySpeed = this.speed * Math.sin(angle);
+
         },
 
         tick: function () {
@@ -44,13 +47,23 @@
 
                 if (Math.abs(this.x - this.tx) < 2 && Math.abs(this.y - this.ty) < 2) {
                     this.exploding = true;
+                    this.x = this.tx;
+                    this.y = this.ty;
                     this.explodeTime = this.maxExplodeTime;
+                    this.detonation = new Detonate(this.tx, this.ty, 20, 40);
                 }
             } else {
                 this.rad = Math.max(1, (this.maxExplodeTime/2) - (Math.max(1, this.explodeTime / 2)));
+                this.explodeTime--;
             }
 
-            return !(this.exploding && this.explodeTime-- < 0);
+            if (this.detonation) {
+                if (!this.detonation.tick()) {
+                    this.detonation = null;
+                }
+            }
+
+            return !(this.exploding && this.detonation == null);
 
         },
 
@@ -63,16 +76,17 @@
             c.setLineDash([3,3]);
             c.beginPath();
             c.moveTo(this.sx, this.sy);
-            c.lineTo(x + this.w / 2, y + this.h / 2);
+            c.lineTo(x, y);
             c.stroke();
             c.fillStyle = "#282828";
             if (!this.exploding) {
-                c.fillRect(x, y, this.w, this.h);
+                c.fillRect(x - this.w/ 2, y - this.h /2, this.w, this.h);
             } else {
-                c.beginPath();
+                /*c.beginPath();
                 c.arc(x + this.w / 2 , y + this.h / 2 , this.rad, 0, Math.PI * 2);
-                c.fill();
+                c.fill();*/
             }
+            this.detonation && this.detonation.render(gfx);
 
         }
 
