@@ -14,6 +14,7 @@
 
         count: 0,
 
+        frozen: false,
         danger: false,
 
         init: function (world, x, y, screen) {
@@ -40,7 +41,13 @@
             return !(this.remove);
         },
 
-        disactivate: function () {
+        disarm: function () {
+            this.frozen = true;
+            this.danger = false;
+            this.body.SetActive(false);
+        },
+
+        deactivate: function () {
             this.body.SetActive(false);
             Physics.jumpTo(this.body, 0, -3);
             this.remove = true;
@@ -54,7 +61,7 @@
             c.rotate(this.angle);
             c.translate(-5, -5);
             c.fillRect(0, 0, this.w, this.h);
-            c.fillStyle = this.danger && Ω.utils.toggle(400, 2) ? "#222" : DATA.colours.baddream;
+            c.fillStyle = this.danger && !this.frozen && Ω.utils.toggle(400, 2) ? "#222" : DATA.colours.baddream;
             c.fillRect(0, this.h - 1, this.w, 1);
 
             c.fillStyle = "#444";

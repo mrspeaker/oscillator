@@ -41,6 +41,8 @@
             tickle: new Ω.Sound("res/audio/tickle"),
             tick: new Ω.Sound("res/audio/tick", 0.5),
             nope: new Ω.Sound("res/audio/nope", 0.6),
+            win: new Ω.Sound("res/audio/win", 0.3),
+            lose: new Ω.Sound("res/audio/lose", 0.25),
             theme: new Ω.Sound("res/audio/osctune", 0.4, true)
         },
 
@@ -210,6 +212,9 @@
                     this.selected.selected = false;
                     this.player.die();
                 }
+                if (this.state.count === 30) {
+                    this.audio.lose.play();
+                }
                 if (this.state.count > 150 && Ω.input.pressed("select")) {
                     game.setScreen(new TitleScreen());
                 }
@@ -218,13 +223,16 @@
             case "WIN":
                 this.voiceOver = "> program complete. override successful.";
                 if (this.state.first()) {
+                    this.audio.theme.stop();
                     this.audio.complete.play();
+                    this.audio.win.play();
+                    this.bombs.forEach(function (b) {
+                        b.disarm();
+                    });
                 }
-                this.bombs.forEach(function (b) {
-                    b.body.SetActive(false);
-                });
                 if (this.state.count == 130) {
                     this.audio.welldone.play();
+
                 }
                 if (this.state.count > 100 && Ω.input.pressed("select")) {
                     game.setScreen(new TitleScreen());
@@ -260,7 +268,7 @@
                             if (dist < m.rad) {
                                 //self.shake = new Ω.Shake(30, 5);
                                 self.audio.expl.play();
-                                b.disactivate();
+                                b.deactivate();
                                 self.smokey(b);
                             }
                         }

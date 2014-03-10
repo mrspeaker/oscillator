@@ -17,10 +17,8 @@ on GitHub: https://github.com/mrspeaker/oscillator
 Balancing
 Re-export bg at 40%
 Remove or slow down shake
-Tunes
-    game over theme
-    win theme
 Add "warning" sample, or "hit" sound when bombs start to rotate - blink bombs
+tint font correctly
 
 ### optionals
 
