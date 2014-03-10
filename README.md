@@ -12,11 +12,7 @@ by Mr Speaker
 
 on GitHub: https://github.com/mrspeaker/oscillator
 
-## todo:
-
-Better "window" on buildings
-
-### optionals
+### things to do, if you want.
 
 EFFECT: on success, explode bombs
 TUTORIAL: "shoot the damn bombs" warning if first bombs get too close to ground and no fire
