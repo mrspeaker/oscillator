@@ -26,7 +26,7 @@
         bgflyPos: 500,
 
         res: {
-            bg: new Ω.Image("res/images/allbg.png", null, 0.4),
+            bg: new Ω.Image("res/images/allbg2.png", null, 1),
             bgfly: new Ω.Image("res/images/truc.png", null, 0.3),
             scratch: new Ω.Image("res/images/scratchscreen.png", null, 0.4)
         },
