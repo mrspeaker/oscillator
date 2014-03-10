@@ -23,7 +23,7 @@
 
         shake: null,
 
-        bgflyPos: 500,
+        bgflyPos: 2500,
 
         res: {
             bg: new Ω.Image("res/images/allbg2.png", null, 1),
@@ -197,7 +197,7 @@
 
                 // Move the lil' background blip. ToDO: background activity
                 this.bgflyPos -= 0.4;
-                if (this.bgflyPos < -20) {
+                if (this.bgflyPos < -400) {
                     this.bgflyPos = Ω.env.w + 10;
                 }
                 break;
