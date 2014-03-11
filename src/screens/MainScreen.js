@@ -260,16 +260,19 @@
 
             var self = this;
             this.bombs.forEach(function (b) {
-                var alive = b.tick();
+                var alive = b.tick(),
+                    dist,
+                    big;
                 if (alive) {
                     self.player.missiles.forEach(function (m) {
                         if (m.exploding && m.explodeTime >= 0) {
-                            var dist = Ω.utils.distCenter(b, m);
+                            dist = Ω.utils.distCenter(b, m);
                             if (dist < m.rad) {
-                                self.shake = new Ω.Shake(30, 3);
+                                big = Math.random() < 0.1;
+                                self.shake = new Ω.Shake(30, big ? 15 : 3);
                                 self.audio.expl.play();
                                 b.deactivate();
-                                self.smokey(b);
+                                self.smokey(b, big);
                             }
                         }
                     });
@@ -286,13 +289,15 @@
             }
         },
 
-        smokey: function (b) {
-            for (var i = 0; i < 5; i++) {
+        smokey: function (b, isBig) {
+            var num = isBig ? 15 : 5,
+                numTwice = num * 2;
+            for (var i = 0; i < num; i++) {
                 var s = new Smoke(
-                    b.x + Ω.utils.rand(-5, 5),
-                    b.y + Ω.utils.rand(-5, 5),
-                    Ω.utils.rand(5, 10) / 10 - 0.5,
-                    Ω.utils.rand(5, 10) / 10 - 0.5,
+                    b.x + Ω.utils.rand(-num, num),
+                    b.y + Ω.utils.rand(-num, num),
+                    Ω.utils.rand(num, numTwice) / numTwice - 0.5,
+                    Ω.utils.rand(num, numTwice) / numTwice - 0.5,
                     Ω.utils.rand(2, 20),
                     Ω.utils.rand(0, 100) / 100);
                 this.smokes.push(s);

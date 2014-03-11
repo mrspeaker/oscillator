@@ -17,7 +17,9 @@
 
     -->
     <section>
-        <canvas id="board"></canvas>
+        <div id="fsboard">
+            <canvas id="board"></canvas>
+        </div>
         <div id="sous"></div>
         <div id="credits">
             by <a href="http://www.mrspeaker.net/">Mr Speaker</a>. Go
@@ -51,7 +53,7 @@
         document
             .querySelector("#fs")
             .addEventListener("click", function () {
-                Ω.utils.fullscreen.toggle("#board");
+                Ω.utils.fullscreen.toggle("#fsboard");
             }, false);
     </script>
 

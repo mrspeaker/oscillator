@@ -17,6 +17,8 @@
         frozen: false,
         danger: false,
 
+        particles: null,
+
         init: function (world, x, y, screen) {
             this.body = (window.Physics.createCircle(world, x, y, 0.5)).GetBody();
             this.body.SetUserData(this);
@@ -38,6 +40,8 @@
                 this.audio.play();
             }
 
+            this.particles && this.particles.tick();
+
             return !(this.remove);
         },
 
@@ -45,6 +49,8 @@
             this.frozen = true;
             this.danger = false;
             this.body.SetActive(false);
+            this.particles = new Ω.Particle({life: 600, col: "252,81,84"});
+            this.particles.play(this.x, this.y);
         },
 
         deactivate: function () {
@@ -61,19 +67,15 @@
             c.rotate(this.angle);
             c.translate(-5, -5);
             c.fillRect(0, 0, this.w, this.h);
-            c.fillStyle = this.danger && !this.frozen && Ω.utils.toggle(400, 2) ? "#222" : DATA.colours.baddream;
+            c.fillStyle = this.frozen || (this.danger && Ω.utils.toggle(400, 2)) ? "#222" : DATA.colours.baddream;
             c.fillRect(0, this.h - 1, this.w, 1);
 
             c.fillStyle = "#444";
             c.fillRect(0, 0, 1, this.h - 1);
 
-            /*c.fillStyle = "#888400";
-            c.fillRect(0, this.h - 2, this.w, 1);
-
-            c.fillStyle = "#fff";
-            c.fillRect(0, this.h - 3, this.w, 1);*/
-
             c.restore();
+
+            this.particles && this.particles.render(gfx);
         }
 
     });
